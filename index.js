@@ -34,23 +34,32 @@ exports.handler = (event, context) => {
 
       case "IntentRequest":
         // Intent Request
-        console.log(`INTENT REQUEST:` + event.request.intent.name);
-        let slots = event.request.intent.slots;
-        let search = '';
-        for (var p in slots) {
-          if( slots.hasOwnProperty(p) ) {
-            console.log(p + ': ' + slots[p].value);
-            search = slots[p].value;
-          } 
-        }   
+        if (!event.session.user.accessToken) {
+          context.succeed(
+            generateResponse(
+              buildSpeechletResponse(`Please link your account`, true),
+            {}
+            )
+          )
+        } else {
+          console.log(`INTENT REQUEST:` + event.request.intent.name);
+          let slots = event.request.intent.slots;
+          let search = '';
+          for (var p in slots) {
+            if( slots.hasOwnProperty(p) ) {
+              console.log(p + ': ' + slots[p].value);
+              search = slots[p].value;
+            } 
+          }   
+          console.log('user token is: '+ event.session.user.accessToken);
+          let reqBody = {
+            cmd: event.request.intent.name,
+            searchTerms: search,
+            userid: event.session.user.accessToken
+          };
+          scoutOptions.body = JSON.stringify(reqBody);
 
-        let reqBody = {
-          cmd: event.request.intent.name,
-          searchTerms: search
-        };
-        scoutOptions.body = JSON.stringify(reqBody);
-
-        rp(scoutOptions)
+          rp(scoutOptions)
           .then(function(body) {
             var jsonBody = JSON.parse(body);
             console.log(body);
@@ -61,6 +70,7 @@ exports.handler = (event, context) => {
               )
             )
           });
+        }
         break;
       case "SessionEndedRequest":
         // Session Ended Request
@@ -98,6 +108,3 @@ generateResponse = (speechletResponse, sessionAttributes) => {
     response: speechletResponse
   }
 }
-
-
-
