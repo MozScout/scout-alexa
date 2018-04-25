@@ -7,6 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
+    "alexa-sdk": "^1.0.25",
     "fuse": "^0.4.0",
     "fuse.js": "^3.2.0",
     "request": "^2.83.0",
