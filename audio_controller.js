@@ -18,6 +18,7 @@ var audio_controller = (function() {
       this.attributes['enqueuedToken'] = null;
       var offsetInMilliseconds = this.attributes['offsetInMilliseconds'];
       var message = 'This is the article.';
+      console.log('URL is: ' + this.attributes['url']);
       this.response
         .speak(message)
         .audioPlayerPlay(
