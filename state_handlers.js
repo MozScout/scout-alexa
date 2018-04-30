@@ -25,81 +25,16 @@ var state_handlers = {
         this.emit(':responseReady');
       },
       SearchAndPlayArticle: function() {
-        console.log('SearchAndPlayArticle');
-        const directiveServiceCall = callDirectiveService(this.event).catch(
-          error => {
-            console.log('Unable to play a progressive response' + error);
-          }
-        );
-
-        const getArticle = scout_agent.handle(this.event).then(
-          url => {
-            console.log('promise resolved: ' + url.url);
-            // this.attributes['title'] = 'Place holder for a cool story';
-            this.attributes['url'] = url.url;
-            audio_controller.play.call(this);
-          },
-          error => {
-            this.response.speak(
-              'Unable to find the article.  Please try' +
-                ' saying get titles to hear your titles.'
-            );
-            this.emit(':responseReady');
-          }
-        );
-
-        Promise.all([directiveServiceCall, getArticle]).then(function(values) {
-          console.log(values);
-        });
+        synthesisHelper(this);
       },
       ScoutMyPocketSummary: function() {
-        console.log('ScoutMyPocketSummary');
-        scout_agent.handle(this.event).then(
-          url => {
-            console.log('promise resolved');
-            this.attributes['title'] = 'Here is your pocket summary';
-            this.attributes['url'] = url.url;
-            audio_controller.play.call(this);
-          },
-          error => {
-            this.response.speak('Error Getting Summaries');
-            this.emit(':responseReady');
-          }
-        );
+        synthesisHelper(this);
       },
       ScoutHeadlines: function() {
-        console.log('ScoutHeadlines');
-        scout_agent.handle(this.event).then(
-          headlines => {
-            console.log('promise resolved');
-            this.response.speak(headlines.text).listen('goodbye');
-            this.emit(':responseReady');
-          },
-          error => {
-            this.response.speak('Error Getting titles');
-            this.emit(':responseReady');
-          }
-        );
+        synthesisHelper(this);
       },
       ScoutTitles: function() {
-        console.log('ScoutTitles');
-        scout_agent.handle(this.event).then(
-          titles => {
-            console.log('promise resolved');
-            this.response
-              .speak(
-                'Here are your titles: ' +
-                  titles.speech +
-                  '.  You can say play that article about polar bears'
-              )
-              .listen('goodbye');
-            this.emit(':responseReady');
-          },
-          error => {
-            this.response.speak('Error Getting titles');
-            this.emit(':responseReady');
-          }
-        );
+        getTitlesHelper(this);
       },
       'AMAZON.HelpIntent': function() {
         var message = 'Welcome to Scout. You can say, get titles to begin.';
@@ -140,52 +75,16 @@ var state_handlers = {
       this.emit(':responseReady');
     },
     SearchAndPlayArticle: function() {
-      console.log('SearchAndPlayArticle');
-      const directiveServiceCall = callDirectiveService(this.event).catch(
-        error => {
-          console.log('Unable to play a progressive response' + error);
-        }
-      );
-
-      const getArticle = scout_agent.handle(this.event).then(
-        url => {
-          console.log('promise resolved: ' + url.url);
-          // this.attributes['title'] = 'Place holder for a cool story';
-          this.attributes['url'] = url.url;
-          audio_controller.play.call(this);
-        },
-        error => {
-          this.response.speak(
-            'Unable to find the article.  Please try' +
-              ' saying get titles to hear your titles.'
-          );
-          this.emit(':responseReady');
-        }
-      );
-
-      Promise.all([directiveServiceCall, getArticle]).then(function(values) {
-        console.log(values);
-      });
+      synthesisHelper(this);
+    },
+    ScoutMyPocketSummary: function() {
+      synthesisHelper(this);
+    },
+    ScoutHeadlines: function() {
+      synthesisHelper(this);
     },
     ScoutTitles: function() {
-      console.log('ScoutTitles');
-      scout_agent.handle(this.event).then(
-        titles => {
-          console.log('promise resolved');
-          this.response
-            .speak(
-              'Here are your titles: ' +
-                titles.speech +
-                '.  You can say play that article about polar bears'
-            )
-            .listen('goodbye');
-          this.emit(':responseReady');
-        },
-        error => {
-          this.response.speak('Error Getting titles');
-          this.emit(':responseReady');
-        }
-      );
+      getTitlesHelper(this);
     },
     'AMAZON.PauseIntent': function() {
       console.log('pause intent');
@@ -272,6 +171,60 @@ var scout_agent = (function() {
   };
 })();
 
+//Handler to get the titles for Alexa to read
+function getTitlesHelper(stateObj) {
+  console.log('ScoutTitles');
+  scout_agent.handle(stateObj.event).then(
+    titles => {
+      console.log('promise resolved');
+      stateObj.response
+        .speak(
+          'Here are your titles: ' +
+            titles.speech +
+            '.  You can say play that article about polar bears'
+        )
+        .listen('goodbye');
+      stateObj.emit(':responseReady');
+    },
+    error => {
+      stateObj.response.speak('Error Getting titles');
+      stateObj.emit(':responseReady');
+    }
+  );
+}
+
+//Helper to get anything that needs to be
+//synthesized as speech and return as a url
+// to play with audioPlayer.
+function synthesisHelper(stateObj) {
+  console.log('synthesisHelper');
+  const directiveServiceCall = callDirectiveService(stateObj.event).catch(
+    error => {
+      console.log('Unable to play a progressive response' + error);
+    }
+  );
+
+  const getArticle = scout_agent.handle(stateObj.event).then(
+    url => {
+      console.log('promise resolved: ' + url.url);
+      stateObj.attributes['url'] = url.url;
+      stateObj.attributes['offsetInMilliseconds'] = 0;
+      audio_controller.play.call(stateObj);
+    },
+    error => {
+      stateObj.response.speak(
+        'Unable to find the article.  Please try' +
+          ' saying get titles to hear your titles.'
+      );
+      stateObj.emit(':responseReady');
+    }
+  );
+
+  Promise.all([directiveServiceCall, getArticle]).then(function(values) {
+    console.log(values);
+  });
+}
+
 function callDirectiveService(event) {
   // Call Alexa Directive Service.
   const ds = new Alexa.services.DirectiveService();
@@ -284,7 +237,5 @@ function callDirectiveService(event) {
   );
   return ds.enqueue(directive, endpoint, token);
 }
-
-function stateSet(thisParam, state) {}
 
 module.exports = state_handlers;
