@@ -29,14 +29,14 @@ var state_handlers = {
       },
       SearchAndPlayArticle: function() {
         console.log('START_MODE:SearchAndPlayArticle');
-        synthesisHelper(this);
+        searchAndPlayArticleHelper(this);
       },
       SearchAndSummarizeArticle: function() {
         console.log('START_MODE:SearchAndSummarizeArticle');
         synthesisHelper(this);
       },
-      ScoutMyPocketSummary: function() {
-        console.log('START_MODE:ScoutMyPocketSummary');
+      ScoutMyPocket: function() {
+        console.log('START_MODE:ScoutMyPocket');
         synthesisHelper(this);
       },
       ScoutHeadlines: function() {
@@ -90,14 +90,14 @@ var state_handlers = {
     },
     SearchAndPlayArticle: function() {
       console.log('PLAY_MODE:SearchAndPlayArticle');
-      synthesisHelper(this);
+      searchAndPlayArticleHelper(this);
     },
     SearchAndSummarizeArticle: function() {
       console.log('PLAY_MODE:SearchAndSummarizeArticle');
       synthesisHelper(this);
     },
-    ScoutMyPocketSummary: function() {
-      console.log('PLAY_MODE:ScoutMyPocketSummary');
+    ScoutMyPocket: function() {
+      console.log('PLAY_MODE:ScoutMyPocket');
       synthesisHelper(this);
     },
     ScoutHeadlines: function() {
@@ -115,7 +115,7 @@ var state_handlers = {
     'AMAZON.StopIntent': function() {
       console.log('PLAY_MODE:AMAZON.StopIntent');
       // audio_controller.stop.call(this);
-      this.response.speak(ALEXA_STOP_RESP);
+      this.response.speak(constants.strings.ALEXA_STOP_RESP);
       this.emit(':responseReady');
     },
     'AMAZON.CancelIntent': function() {
@@ -186,22 +186,7 @@ var state_handlers = {
       },
       SearchAndPlayArticle: function() {
         console.log('TITLES_DECISION_MODE:SearchAndPlayArticle');
-        let searchTerm = getTitleFromSlotEvent(this.event);
-        if (searchTerm) {
-          let thisVar = this;
-          findBestScoringTitle(
-            searchTerm,
-            this.attributes['titles'].articles
-          ).then(function(article) {
-            thisVar.attributes['chosenArticle'] = article.resolved_url;
-            thisVar.response
-              .speak(
-                constants.strings.TITLE_CHOOSE_SUMM_FULL + article.title + '?'
-              )
-              .listen(constants.strings.TITLE_CHOICE_REPROMPT);
-            thisVar.emit(':responseReady');
-          });
-        }
+        matchArticleToTitlesHelper(this);
       },
       ScoutTitles: function() {
         console.log('TITLES_DECISION_MODE:ScoutTitles');
@@ -214,7 +199,12 @@ var state_handlers = {
       },
       'AMAZON.StopIntent': function() {
         console.log('TITLES_DECISION_MODE:AMAZON.StopIntent');
+        this.handler.state = constants.states.START_MODE;
         this.response.speak(constants.strings.ALEXA_STOP_RESP);
+        this.handler.state = '';
+        delete this.attributes['STATE'];
+        this.emit(':saveState', true);
+
         this.emit(':responseReady');
       },
       'AMAZON.HelpIntent': function() {
@@ -297,6 +287,25 @@ var scout_agent = (function() {
   };
 
   return {
+    handleTitles: function(event) {
+      return new Promise((resolve, reject) => {
+        let reqBody = {
+          cmd: 'ScoutTitles',
+          userid: event.session.user.accessToken
+        };
+        scoutOptions.body = JSON.stringify(reqBody);
+
+        rp(scoutOptions)
+          .then(function(body) {
+            var jsonBody = JSON.parse(body);
+            resolve(jsonBody);
+          })
+          .catch(function(err) {
+            console.log('Scout unavailable');
+            reject('Scout Unavailable');
+          });
+      });
+    },
     handle: function(event) {
       return new Promise((resolve, reject) => {
         let search = getTitleFromSlotEvent(event);
@@ -351,6 +360,32 @@ var scout_agent = (function() {
     }
   };
 })();
+
+function matchArticleToTitlesHelper(stateObj) {
+  let searchTerm = getTitleFromSlotEvent(stateObj.event);
+  if (searchTerm) {
+    let thisVar = stateObj;
+    findBestScoringTitle(
+      searchTerm,
+      stateObj.attributes['titles'].articles
+    ).then(function(article) {
+      thisVar.attributes['chosenArticle'] = article.resolved_url;
+      thisVar.response
+        .speak(constants.strings.TITLE_CHOOSE_SUMM_FULL + article.title + '?')
+        .listen(constants.strings.TITLE_CHOICE_REPROMPT);
+      thisVar.emit(':responseReady');
+    });
+  }
+}
+
+async function searchAndPlayArticleHelper(stateObj) {
+  if (stateObj.event.session.new) {
+    const titles = await scout_agent.handleTitles(stateObj.event);
+    stateObj.attributes['titles'] = titles;
+  }
+  stateObj.handler.state = constants.states.TITLES_DECISION_MODE;
+  matchArticleToTitlesHelper(stateObj);
+}
 
 //Handler to get the titles for Alexa to read
 function getTitlesHelper(stateObj) {
