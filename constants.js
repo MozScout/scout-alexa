@@ -52,7 +52,10 @@ module.exports = Object.freeze({
     ALEXA_STOP_RESP: 'Goodbye!  Thanks for listening to the web with Scout',
     ERROR_UNHANDLED_STATE:
       'Sorry, I could not understand. Please say, get titles to hear your titles.',
-    ERROR_UNEXPECTED_STATE: 'Sorry, unhandled intent: in state: '
+    ERROR_UNEXPECTED_STATE: 'Sorry, unhandled intent: in state: ',
+    PLAY_MODE_UNHANDLED:
+      'Sorry, I could not understand that.  ' +
+      'You can say pause or resume or stop to control the audio'
   },
   TITLE_CHUNK_LEN: 5,
 
