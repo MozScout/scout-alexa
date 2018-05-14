@@ -50,8 +50,9 @@ var state_handlers = {
       'AMAZON.HelpIntent': function() {
         console.log('START_MODE:AMAZON.HelpIntent');
 
-        var message = 'Welcome to Scout. You can say, get titles to begin.';
-        this.response.speak(message).listen(message);
+        this.response
+          .speak(constants.strings.WELCOME_MSG)
+          .listen(constants.strings.WELCOME_MSG);
         this.emit(':responseReady');
       },
       'AMAZON.StopIntent': function() {
@@ -63,6 +64,14 @@ var state_handlers = {
         console.log('START_MODE:AMAZON.CancelIntent');
         this.response.speak(constants.strings.ALEXA_STOP_RESP);
         this.emit(':responseReady');
+      },
+      'AMAZON.PauseIntent': function() {
+        console.log('PLAY_MODE:AMAZON.PauseIntent');
+        audio_controller.stop.call(this);
+      },
+      'AMAZON.ResumeIntent': function() {
+        console.log('PLAY_MODE:AMAZON.ResumeIntent');
+        audio_controller.play.call(this);
       },
       SessionEndedRequest: function() {
         console.log('START_MODE:AMAZON.SessionEndedRequest');
@@ -112,9 +121,13 @@ var state_handlers = {
       console.log('PLAY_MODE:AMAZON.PauseIntent');
       audio_controller.stop.call(this);
     },
+    'AMAZON.ResumeIntent': function() {
+      console.log('PLAY_MODE:AMAZON.ResumeIntent');
+      audio_controller.play.call(this);
+    },
     'AMAZON.StopIntent': function() {
       console.log('PLAY_MODE:AMAZON.StopIntent');
-      // audio_controller.stop.call(this);
+      audio_controller.stop.call(this);
       this.response.speak(constants.strings.ALEXA_STOP_RESP);
       this.emit(':responseReady');
     },
@@ -122,12 +135,9 @@ var state_handlers = {
       console.log('PLAY_MODE:AMAZON.CancelIntent');
       audio_controller.stop.call(this);
     },
-    'AMAZON.ResumeIntent': function() {
-      console.log('PLAY_MODE:AMAZON.ResumeIntent');
-      audio_controller.play.call(this);
-    },
     'AMAZON.HelpIntent': function() {
       console.log('PLAY_MODE:AMAZON.HelpIntent');
+
       var message = constants.strings.WELCOME_MSG;
       this.response.speak(message).listen(message);
       this.emit(':responseReady');
@@ -135,6 +145,7 @@ var state_handlers = {
     SessionEndedRequest: function() {
       // No session ended logic
       console.log('PLAY_MODE:SessionEndedRequest');
+      audio_controller.stop.call(this);
 
       this.handler.state = '';
       delete this.attributes['STATE'];
@@ -143,9 +154,9 @@ var state_handlers = {
     Unhandled: function() {
       console.log('PLAY_MODE:Unhandled: ' + this.event.request.intent.name);
 
-      var message =
-        'Sorry, I could not understand Play Mode. You can say, Next or Previous to navigate through the playlist.';
-      this.response.speak(message).listen(message);
+      this.response
+        .speak(constants.strings.PLAY_MODE_UNHANDLED)
+        .listen(constants.strings.PLAY_MODE_UNHANDLED);
       this.emit(':responseReady');
     }
   }),
@@ -196,6 +207,14 @@ var state_handlers = {
         console.log('TITLES_DECISION_MODE:ScoutHeadlines');
         this.handler.state = constants.states.START_MODE;
         synthesisHelper(this);
+      },
+      'AMAZON.PauseIntent': function() {
+        console.log('PLAY_MODE:AMAZON.PauseIntent');
+        audio_controller.stop.call(this);
+      },
+      'AMAZON.ResumeIntent': function() {
+        console.log('PLAY_MODE:AMAZON.ResumeIntent');
+        audio_controller.play.call(this);
       },
       'AMAZON.StopIntent': function() {
         console.log('TITLES_DECISION_MODE:AMAZON.StopIntent');
