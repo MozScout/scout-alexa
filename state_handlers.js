@@ -21,10 +21,9 @@ var state_handlers = {
         this.handler.state = constants.states.START_MODE;
         this.attributes['offsetInMilliseconds'] = 0;
 
-        var message = 'Welcome to Scout! You can say, get my titles to begin.';
-        var reprompt = 'You can say, get my titles to begin.';
-
-        this.response.speak(message).listen(reprompt);
+        this.response
+          .speak(constants.strings.WELCOME_MSG)
+          .listen(constants.strings.WELCOME_REPROMPT);
         this.emit(':responseReady');
       },
       SearchAndPlayArticle: function() {
@@ -444,9 +443,10 @@ function getTitleChunk(articleJson, stateObj) {
   console.log(arrChunk);
 
   arrChunk.forEach(function(element, index) {
-    console.log('article title: ' + element.title);
+    const cleanTitle = cleanStringForSsml(element.title);
+    console.log(`article title: ${cleanTitle}`);
 
-    retSpeech = `${retSpeech} ${index + 1}. ${element.title}. ${
+    retSpeech = `${retSpeech} ${index + 1}. ${cleanTitle}. ${
       element.lengthMinutes
     } minutes.  `;
   });
@@ -517,6 +517,17 @@ function synthesisHelperUrl(stateObj) {
   Promise.all([directiveServiceCall, getArticle]).then(function(values) {
     console.log(values);
   });
+}
+
+function cleanStringForSsml(alexaString) {
+  let cleanedString = alexaString
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&apos;');
+
+  return cleanedString;
 }
 
 function getTitleFromSlotEvent(event) {
