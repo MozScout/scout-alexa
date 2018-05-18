@@ -235,16 +235,20 @@ var state_handlers = {
         console.log('TITLES_DECISION_MODE:AMAZON.RepeatIntent');
         //Backup the title count.
         this.attributes['titleCount'] -= constants.TITLE_CHUNK_LEN;
-        let respTitles = getTitleChunk(
+        let titleChunk = getTitleChunk(
           this.attributes['titles'].articles,
           this
         );
         this.response
           .speak(
             constants.strings.TITLES_REPEAT +
-              respTitles +
+              titleChunk.retSpeech +
               constants.strings.TITLE_CHOICE_EXPLAIN
           )
+          .cardRenderer('Titles', prepStringForDisplay(titleChunk.retSpeech), {
+            smallImageUrl: titleChunk.image,
+            largeImageUrl: titleChunk.image
+          })
           .listen(constants.strings.TITLE_LISTEN);
 
         this.emit(':responseReady');
@@ -252,20 +256,26 @@ var state_handlers = {
       'AMAZON.NextIntent': function() {
         //Get the next chunk of titles
         console.log('TITLES_DECISION_MODE:AMAZON.NextIntent');
-        let respTitles = getTitleChunk(
+        let titleChunk = getTitleChunk(
           this.attributes['titles'].articles,
           this
         );
         let message = '';
-        if (!respTitles) {
+        if (!titleChunk) {
           message = constants.strings.TITLE_POCKET;
         } else {
           message =
             'Here are the next titles: ' +
-            respTitles +
+            titleChunk.retSpeech +
             constants.strings.TITLE_LISTEN2;
         }
-        this.response.speak(message).listen(constants.strings.TITLE_LISTEN);
+        this.response
+          .speak(message)
+          .cardRenderer('Titles', prepStringForDisplay(titleChunk.retSpeech), {
+            smallImageUrl: titleChunk.image,
+            largeImageUrl: titleChunk.image
+          })
+          .listen(constants.strings.TITLE_LISTEN);
 
         this.emit(':responseReady');
       },
@@ -414,14 +424,18 @@ function getTitlesHelper(stateObj) {
       stateObj.handler.state = constants.states.TITLES_DECISION_MODE;
       stateObj.attributes['titleCount'] = 0;
       stateObj.attributes['titles'] = titles;
-      let respTitles = getTitleChunk(titles.articles, stateObj);
-      console.log(titles.articles);
+      let titleChunk = getTitleChunk(titles.articles, stateObj);
+      // console.log(titles.articles);
       stateObj.response
         .speak(
           constants.strings.TITLE_ANN +
-            respTitles +
+            titleChunk.retSpeech +
             constants.strings.TITLE_CHOICE_EXPLAIN
         )
+        .cardRenderer('Titles', prepStringForDisplay(titleChunk.retSpeech), {
+          smallImageUrl: titleChunk.image,
+          largeImageUrl: titleChunk.image
+        })
         .listen(constants.strings.TITLE_LISTEN);
       stateObj.emit(':responseReady');
     },
@@ -441,18 +455,25 @@ function getTitleChunk(articleJson, stateObj) {
     curCount + constants.TITLE_CHUNK_LEN
   );
   console.log(arrChunk);
+  let image;
 
   arrChunk.forEach(function(element, index) {
     const cleanTitle = cleanStringForSsml(element.title);
     console.log(`article title: ${cleanTitle}`);
 
-    retSpeech = `${retSpeech} ${index + 1}. ${cleanTitle}. ${
+    retSpeech = `${retSpeech} ${index + 1}. ${cleanTitle}. (${
       element.lengthMinutes
-    } minutes.  `;
+    } minutes) `;
+
+    // send back the image for the first article
+    image = image ? image : element.imageURL;
   });
   stateObj.attributes['titleCount'] += arrChunk.length;
 
-  return retSpeech;
+  return {
+    retSpeech,
+    image
+  };
 }
 
 //Helper to get anything that needs to be
@@ -528,6 +549,23 @@ function cleanStringForSsml(alexaString) {
     .replace(/'/g, '&apos;');
 
   return cleanedString;
+}
+
+function prepStringForDisplay(htmlStr) {
+  // Remove the HTML marks.
+  let strippedHtml = htmlStr.replace(/<[^>]+>/g, ' ');
+  // Now replace the quotes and other markups.
+  strippedHtml = strippedHtml
+    .replace(/&amp;/g, '&')
+    .replace(/&rdquo;/g, '"')
+    .replace(/&ldquo;/g, '"')
+    .replace(/&rsquo;/g, "'")
+    .replace(/&lsquo;/g, "'")
+    .replace(/&mdash;/g, '-')
+    .replace(/&ndash;/g, '-')
+    .replace(/&nbsp;/g, ' ')
+    .replace(/&thinsp;/g, '');
+  return strippedHtml;
 }
 
 function getTitleFromSlotEvent(event) {
