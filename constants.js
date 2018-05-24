@@ -30,9 +30,7 @@ module.exports = Object.freeze({
     TITLE_LISTEN:
       'You can say next to hear more titles or repeat to repeat' +
       ' the ones you just heard',
-    TITLE_POCKET:
-      'No more titles in your queue.  You can say get headlines' +
-      ' to hear summaries of articles pocket recommends. ',
+    TITLE_POCKET: 'No more titles in your queue.',
     TITLE_LISTEN2:
       '<break />You can say play or summarize and then a keyword from the ' +
       'article',
