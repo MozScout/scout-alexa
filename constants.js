@@ -43,9 +43,8 @@ module.exports = Object.freeze({
     TITLES_NEXT: 'Here are the next titles: ',
     TITLES_REPEAT: 'Repeating last titles<break />',
     TITLE_CHOOSE_SUMM_FULL:
-      'Would you like to hear a summary or the full article of ',
-    TITLE_CHOICE_REPROMPT:
-      'You can say summary to hear a summary or full article to hear the full article',
+      'Would you like to hear a summary or the full article?',
+    TITLE_CHOICE_REPROMPT: 'You can say summary or full article.',
     ARTICLE_FAIL_MSG:
       'Unable to find the article.  Please try' +
       ' saying get titles to hear your titles.',
