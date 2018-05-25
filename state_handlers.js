@@ -38,10 +38,6 @@ var state_handlers = {
         console.log('START_MODE:ScoutMyPocket');
         synthesisHelper(this);
       },
-      ScoutHeadlines: function() {
-        console.log('START_MODE:ScoutHeadlines');
-        synthesisHelper(this);
-      },
       ScoutTitles: function() {
         console.log('START_MODE:ScoutTitles');
         getTitlesHelper(this);
@@ -106,10 +102,6 @@ var state_handlers = {
     },
     ScoutMyPocket: function() {
       console.log('PLAY_MODE:ScoutMyPocket');
-      synthesisHelper(this);
-    },
-    ScoutHeadlines: function() {
-      console.log('PLAY_MODE:ScoutHeadlines');
       synthesisHelper(this);
     },
     ScoutTitles: function() {
@@ -201,11 +193,6 @@ var state_handlers = {
       ScoutTitles: function() {
         console.log('TITLES_DECISION_MODE:ScoutTitles');
         getTitlesHelper(this);
-      },
-      ScoutHeadlines: function() {
-        console.log('TITLES_DECISION_MODE:ScoutHeadlines');
-        this.handler.state = constants.states.START_MODE;
-        synthesisHelper(this);
       },
       'AMAZON.PauseIntent': function() {
         console.log('PLAY_MODE:AMAZON.PauseIntent');
