@@ -27,9 +27,7 @@ module.exports = Object.freeze({
       'You can say next to hear more titles, or repeat to repeat ' +
       'titles.  You can say play polar bears or skim polar bears to hear an ' +
       'article about polar bears',
-    TITLE_POCKET:
-      'No more titles in your queue.  You can say get headlines' +
-      ' to hear summaries of articles pocket recommends. ',
+    TITLE_POCKET: 'No more titles in your queue.',
     TITLE_ANN: 'Here are your titles: ',
     TITLE_CHOICE_EXPLAIN: 'What would you like to listen to?',
     TITLE_CHOICE_EXPLAIN_REPROMPT:
@@ -37,9 +35,8 @@ module.exports = Object.freeze({
     TITLES_NEXT: 'Here are the next titles: ',
     TITLES_REPEAT: 'Repeating last titles<break />',
     TITLE_CHOOSE_SUMM_FULL:
-      'Would you like to hear a summary or the full article of ',
-    TITLE_CHOICE_REPROMPT:
-      'You can say summary to hear a summary or full article to hear the full article',
+      'Would you like to hear a summary or the full article?',
+    TITLE_CHOICE_REPROMPT: 'You can say summary or full article.',
     ARTICLE_FAIL_MSG:
       'Unable to find the article.  Please try' +
       ' saying get titles to hear your titles.',
