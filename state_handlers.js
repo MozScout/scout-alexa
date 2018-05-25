@@ -376,7 +376,7 @@ function matchArticleToTitlesHelper(stateObj) {
     ).then(function(article) {
       thisVar.attributes['chosenArticle'] = article.resolved_url;
       thisVar.response
-        .speak(constants.strings.TITLE_CHOOSE_SUMM_FULL + article.title + '?')
+        .speak(constants.strings.TITLE_CHOOSE_SUMM_FULL)
         .listen(constants.strings.TITLE_CHOICE_REPROMPT);
       thisVar.emit(':responseReady');
     });
