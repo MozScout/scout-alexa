@@ -55,7 +55,8 @@ module.exports = Object.freeze({
     ERROR_UNEXPECTED_STATE: 'Sorry, unhandled intent: in state: ',
     PLAY_MODE_UNHANDLED:
       'Sorry, I could not understand that.  ' +
-      'You can say pause or resume or stop to control the audio'
+      'You can say pause or resume or stop to control the audio',
+    WAIT_ARTICLE: 'One moment while I get that ready for you...'
   },
   TITLE_CHUNK_LEN: 5,
 

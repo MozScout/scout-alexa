@@ -586,7 +586,7 @@ function callDirectiveService(event) {
   const token = event.context.System.apiAccessToken;
   const directive = new Alexa.directives.VoicePlayerSpeakDirective(
     requestId,
-    'One moment while I get that article ready for you...'
+    constants.strings.WAIT_ARTICLE
   );
   return ds.enqueue(directive, endpoint, token);
 }
