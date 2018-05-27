@@ -1,0 +1,80 @@
+{
+  "interactionModel": {
+    "languageModel": {
+      "invocationName": "scout",
+      "intents": [
+        {
+          "name": "AMAZON.CancelIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.HelpIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.PauseIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.ResumeIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.StopIntent",
+          "samples": []
+        },
+        {
+          "name": "ScoutMyPocket",
+          "slots": [],
+          "samples": ["pocket"]
+        },
+        {
+          "name": "ScoutTitles",
+          "slots": [],
+          "samples": ["get my titles", "titles"]
+        },
+        {
+          "name": "SearchAndPlayArticle",
+          "slots": [
+            {
+              "name": "CatchAllSlot",
+              "type": "AMAZON.SearchQuery"
+            }
+          ],
+          "samples": [
+            "play that article about {CatchAllSlot}",
+            "play the article about {CatchAllSlot}",
+            "Play {CatchAllSlot}"
+          ]
+        },
+        {
+          "name": "AMAZON.RepeatIntent",
+          "samples": ["repeat it", "repeat those", "repeat that", "repeat"]
+        },
+        {
+          "name": "AMAZON.NextIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.YesIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.NoIntent",
+          "samples": []
+        },
+        {
+          "name": "skim",
+          "slots": [],
+          "samples": ["summarize", "get me a summary", "summary", "skim"]
+        },
+        {
+          "name": "fullarticle",
+          "slots": [],
+          "samples": ["entire story", "full article", "full story"]
+        }
+      ],
+      "types": []
+    }
+  }
+}
