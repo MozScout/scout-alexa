@@ -385,6 +385,7 @@ function matchArticleToTitlesHelper(stateObj) {
         thisVar.response
           .speak(constants.strings.TITLE_SEARCH_MATCH_FAIL)
           .listen(constants.strings.TITLE_SEARCH_MATCH_FAIL);
+        thisVar.attributes['chosenArticle'] = '';
         thisVar.emit(':responseReady');
       }
     );
@@ -488,31 +489,42 @@ function synthesisHelper(stateObj) {
 // to play with audioPlayer.
 function synthesisHelperUrl(stateObj) {
   console.log('synthesisHelperUrl');
-  const directiveServiceCall = callDirectiveService(stateObj.event).catch(
-    error => {
-      console.log('Unable to play a progressive response' + error);
-    }
-  );
-  console.log('Chosen Article is: ' + stateObj.attributes['chosenArticle']);
-  const getArticle = scout_agent
-    .handleUrl(stateObj.attributes['chosenArticle'], stateObj.event)
-    .then(
-      url => {
-        console.log('promise resolved: ' + url.url);
-        stateObj.attributes['url'] = url.url;
-        stateObj.attributes['offsetInMilliseconds'] = 0;
-        audio_controller.play.call(stateObj);
-      },
+
+  // Check to make sure that there is a chosen article first
+  if (stateObj.attributes['chosenArticle'] === '') {
+    console.log('No chosenArticle.  User probably did not use an intent.');
+    stateObj.response
+      .speak(constants.strings.TITLE_SEARCH_MATCH_FAIL)
+      .listen(constants.strings.TITLE_SEARCH_MATCH_FAIL);
+    stateObj.attributes['chosenArticle'] = '';
+    stateObj.emit(':responseReady');
+  } else {
+    const directiveServiceCall = callDirectiveService(stateObj.event).catch(
       error => {
-        console.log('handleURL promise failed');
-        stateObj.response.speak(constants.strings.ARTICLE_FAIL_MSG);
-        stateObj.emit(':responseReady');
+        console.log('Unable to play a progressive response' + error);
       }
     );
+    console.log('Chosen Article is: ' + stateObj.attributes['chosenArticle']);
+    const getArticle = scout_agent
+      .handleUrl(stateObj.attributes['chosenArticle'], stateObj.event)
+      .then(
+        url => {
+          console.log('promise resolved: ' + url.url);
+          stateObj.attributes['url'] = url.url;
+          stateObj.attributes['offsetInMilliseconds'] = 0;
+          audio_controller.play.call(stateObj);
+        },
+        error => {
+          console.log('handleURL promise failed');
+          stateObj.response.speak(constants.strings.ARTICLE_FAIL_MSG);
+          stateObj.emit(':responseReady');
+        }
+      );
 
-  Promise.all([directiveServiceCall, getArticle]).then(function(values) {
-    console.log(values);
-  });
+    Promise.all([directiveServiceCall, getArticle]).then(function(values) {
+      console.log(values);
+    });
+  }
 }
 
 function cleanStringForSsml(alexaString) {
