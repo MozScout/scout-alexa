@@ -29,6 +29,9 @@ module.exports = Object.freeze({
       'article about polar bears',
     TITLE_POCKET: 'No more titles in your queue.',
     TITLE_ANN: 'Here are your titles: ',
+    TITLE_SEARCH_MATCH_FAIL:
+      'Sorry, I couldn’t find a match.  Say Play followed by a few words in the title ' +
+      'or say Repeat to hear the titles again.',
     TITLE_CHOICE_EXPLAIN: 'What would you like to listen to?',
     TITLE_CHOICE_EXPLAIN_REPROMPT:
       'What would you like to listen to?' + 'You can say next for more titles.',
