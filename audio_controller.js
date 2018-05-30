@@ -17,17 +17,14 @@ var audio_controller = (function() {
       // Since play behavior is REPLACE_ALL, enqueuedToken attribute need to be set to null.
       this.attributes['enqueuedToken'] = null;
       var offsetInMilliseconds = this.attributes['offsetInMilliseconds'];
-      var message = 'This is the article.';
       console.log('URL is: ' + this.attributes['url']);
-      this.response
-        .speak(message)
-        .audioPlayerPlay(
-          playBehavior,
-          this.attributes['url'],
-          token,
-          null,
-          offsetInMilliseconds
-        );
+      this.response.audioPlayerPlay(
+        playBehavior,
+        this.attributes['url'],
+        token,
+        null,
+        offsetInMilliseconds
+      );
 
       this.emit(':responseReady');
     },
