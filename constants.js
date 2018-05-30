@@ -38,6 +38,9 @@ module.exports = Object.freeze({
     TITLE_CHOICE_EXPLAIN:
       '<break/>To pick an article say play the one about polar bears, for example.  ' +
       'To hear more titles say next.  To repeat the titles you just heard say repeat. ',
+    TITLE_SEARCH_MATCH_FAIL:
+      'Sorry, I couldn’t find a match. Try rephrasing or say Repeat to ' +
+      'hear the titles again.',
     TITLES_NEXT: 'Here are the next titles: ',
     TITLES_REPEAT: 'Repeating last titles<break />',
     TITLE_CHOOSE_SUMM_FULL:

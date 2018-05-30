@@ -373,13 +373,21 @@ function matchArticleToTitlesHelper(stateObj) {
     findBestScoringTitle(
       searchTerm,
       stateObj.attributes['titles'].articles
-    ).then(function(article) {
-      thisVar.attributes['chosenArticle'] = article.resolved_url;
-      thisVar.response
-        .speak(constants.strings.TITLE_CHOOSE_SUMM_FULL)
-        .listen(constants.strings.TITLE_CHOICE_REPROMPT);
-      thisVar.emit(':responseReady');
-    });
+    ).then(
+      function(article) {
+        thisVar.attributes['chosenArticle'] = article.resolved_url;
+        thisVar.response
+          .speak(constants.strings.TITLE_CHOOSE_SUMM_FULL)
+          .listen(constants.strings.TITLE_CHOICE_REPROMPT);
+        thisVar.emit(':responseReady');
+      },
+      function(rejectReason) {
+        thisVar.response
+          .speak(constants.strings.TITLE_SEARCH_MATCH_FAIL)
+          .listen(constants.strings.TITLE_SEARCH_MATCH_FAIL);
+        thisVar.emit(':responseReady');
+      }
+    );
   }
 }
 
@@ -395,6 +403,7 @@ async function searchAndPlayArticleHelper(stateObj) {
 //Handler to get the titles for Alexa to read
 function getTitlesHelper(stateObj) {
   console.log('ScoutTitles');
+  console.log('ChosenArticle is: ' + stateObj.attributes['chosenArticle']);
   scout_agent.handle(stateObj.event).then(
     titles => {
       console.log('promise resolved');
@@ -484,7 +493,7 @@ function synthesisHelperUrl(stateObj) {
       console.log('Unable to play a progressive response' + error);
     }
   );
-
+  console.log('Chosen Article is: ' + stateObj.attributes['chosenArticle']);
   const getArticle = scout_agent
     .handleUrl(stateObj.attributes['chosenArticle'], stateObj.event)
     .then(
@@ -556,10 +565,15 @@ function findBestScoringTitle(searchPhrase, articleArr) {
       }
       iCount++;
       if (iCount >= articleArr.length) {
-        console.log('Done getting results.');
         console.log('Max Score is: ' + maxValue);
-        console.log('Article is: ' + articleArr[curMaxIndex].title);
-        resolve(articleArr[curMaxIndex]);
+        // Check to make sure something matched above score of 0.
+        if (maxValue === 0) {
+          console.log('Error, no search match with utterance');
+          reject(constants.strings.TITLE_SEARCH_MATCH_FAIL);
+        } else {
+          console.log('Article is: ' + articleArr[curMaxIndex].title);
+          resolve(articleArr[curMaxIndex]);
+        }
       }
     });
   });
