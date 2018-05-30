@@ -232,7 +232,7 @@ var state_handlers = {
               respTitles +
               constants.strings.TITLE_CHOICE_EXPLAIN
           )
-          .listen(constants.strings.TITLE_LISTEN);
+          .listen(constants.strings.TITLE_CHOICE_EXPLAIN_REPROMPT);
 
         this.emit(':responseReady');
       },
@@ -250,9 +250,11 @@ var state_handlers = {
           message =
             'Here are the next titles: ' +
             respTitles +
-            constants.strings.TITLE_LISTEN2;
+            constants.strings.TITLE_CHOICE_EXPLAIN;
         }
-        this.response.speak(message).listen(constants.strings.TITLE_LISTEN);
+        this.response
+          .speak(message)
+          .listen(constants.strings.TITLE_CHOICE_EXPLAIN_REPROMPT);
 
         this.emit(':responseReady');
       },
@@ -409,7 +411,7 @@ function getTitlesHelper(stateObj) {
             respTitles +
             constants.strings.TITLE_CHOICE_EXPLAIN
         )
-        .listen(constants.strings.TITLE_LISTEN);
+        .listen(constants.strings.TITLE_CHOICE_EXPLAIN_REPROMPT);
       stateObj.emit(':responseReady');
     },
     error => {
