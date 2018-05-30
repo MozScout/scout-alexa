@@ -72,6 +72,10 @@ var state_handlers = {
         console.log('START_MODE:AMAZON.SessionEndedRequest');
         // No session ended logic
       },
+      FinishedArticle: function() {
+        console.log('START_MODE:FinishedArticle');
+        this.emit(':saveState', true);
+      },
       Unhandled: function() {
         console.log('START_MODE:Unhandled: ' + this.event.request.intent.name);
         this.response
