@@ -27,17 +27,11 @@ module.exports = Object.freeze({
       'You can say next to hear more titles, or repeat to repeat ' +
       'titles.  You can say play polar bears or skim polar bears to hear an ' +
       'article about polar bears',
-    TITLE_LISTEN:
-      'You can say next to hear more titles or repeat to repeat' +
-      ' the ones you just heard',
     TITLE_POCKET: 'No more titles in your queue.',
-    TITLE_LISTEN2:
-      '<break />You can say play or summarize and then a keyword from the ' +
-      'article',
     TITLE_ANN: 'Here are your titles: ',
-    TITLE_CHOICE_EXPLAIN:
-      '<break/>To pick an article say play the one about polar bears, for example.  ' +
-      'To hear more titles say next.  To repeat the titles you just heard say repeat. ',
+    TITLE_CHOICE_EXPLAIN: 'What would you like to listen to?',
+    TITLE_CHOICE_EXPLAIN_REPROMPT:
+      'What would you like to listen to?' + 'You can say next for more titles.',
     TITLES_NEXT: 'Here are the next titles: ',
     TITLES_REPEAT: 'Repeating last titles<break />',
     TITLE_CHOOSE_SUMM_FULL:
@@ -52,7 +46,8 @@ module.exports = Object.freeze({
     ERROR_UNEXPECTED_STATE: 'Sorry, unhandled intent: in state: ',
     PLAY_MODE_UNHANDLED:
       'Sorry, I could not understand that.  ' +
-      'You can say pause or resume or stop to control the audio'
+      'You can say pause or resume or stop to control the audio',
+    WAIT_ARTICLE: 'One moment while I get that ready for you...'
   },
   TITLE_CHUNK_LEN: 5,
 
