@@ -46,8 +46,8 @@ var state_handlers = {
         console.log('START_MODE:AMAZON.HelpIntent');
 
         this.response
-          .speak(constants.strings.WELCOME_MSG)
-          .listen(constants.strings.WELCOME_MSG);
+          .speak(constants.strings.START_HELP)
+          .listen(constants.strings.START_HELP);
         this.emit(':responseReady');
       },
       'AMAZON.StopIntent': function() {
@@ -133,8 +133,9 @@ var state_handlers = {
     'AMAZON.HelpIntent': function() {
       console.log('PLAY_MODE:AMAZON.HelpIntent');
 
-      var message = constants.strings.WELCOME_MSG;
-      this.response.speak(message).listen(message);
+      this.response
+        .speak(constants.strings.START_HELP)
+        .listen(constants.strings.START_HELP);
       this.emit(':responseReady');
     },
     SessionEndedRequest: function() {
@@ -218,8 +219,9 @@ var state_handlers = {
       },
       'AMAZON.HelpIntent': function() {
         console.log('TITLES_DECISION_MODE:AMAZON.HelpIntent');
-        var message = constants.strings.TITLE_HELP;
-        this.response.speak(message).listen(message);
+        this.response
+          .speak(constants.strings.TITLE_HELP)
+          .listen(constants.strings.TITLE_HELP);
         this.emit(':responseReady');
       },
       'AMAZON.RepeatIntent': function() {

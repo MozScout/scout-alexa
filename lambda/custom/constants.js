@@ -23,10 +23,15 @@ module.exports = Object.freeze({
   strings: {
     WELCOME_MSG: 'Welcome to Scout. You can say, get titles to begin.',
     WELCOME_REPROMPT: 'You can say, get my titles to begin.',
+    START_HELP:
+      'To listen to an article say “Play” followed by the title or' +
+      ' a few keywords. For example, say “Play the one about polar bears.” ' +
+      'Say “Get my titles” to hear the first 5 articles in Pocket queue.',
     TITLE_HELP:
-      'You can say next to hear more titles, or repeat to repeat ' +
-      'titles.  You can say play polar bears or skim polar bears to hear an ' +
-      'article about polar bears',
+      'To listen to an article say “Play” followed by the title or' +
+      ' a few keywords. For example, say “Play the one about polar bears.” ' +
+      'Say “Get my titles” to hear the first 5 articles in Pocket queue, ' +
+      'next to hear another 5 and repeat to hear them again.',
     TITLE_POCKET: 'No more titles in your queue.',
     TITLE_ANN: 'Here are your titles: ',
     TITLE_SEARCH_MATCH_FAIL:
