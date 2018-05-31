@@ -410,7 +410,7 @@ async function searchAndPlayArticleHelper(stateObj) {
 //Handler to get the titles for Alexa to read
 function getTitlesHelper(stateObj) {
   console.log('ScoutTitles');
-  console.log('ChosenArticle is: ' + stateObj.attributes['chosenArticle']);
+  stateObj.attributes['chosenArticle'] = '';
   scout_agent.handle(stateObj.event).then(
     titles => {
       console.log('promise resolved');
