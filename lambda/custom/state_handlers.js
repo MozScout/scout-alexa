@@ -272,9 +272,7 @@ var state_handlers = {
         this.emit(':saveState', true);
       },
       Unhandled: function() {
-        console.log(
-          'TITLES_DECISION_MODE:Unhandled: ' + this.event.request.intent.name
-        );
+        console.log('TITLES_DECISION_MODE:Unhandled');
 
         var message =
           constants.strings.ERROR_UNEXPECTED_STATE +
@@ -393,7 +391,7 @@ function matchArticleToTitlesHelper(stateObj) {
         thisVar.response
           .speak(constants.strings.TITLE_SEARCH_MATCH_FAIL)
           .listen(constants.strings.TITLE_SEARCH_MATCH_FAIL);
-        thisVar.attributes['chosenArticle'] = '';
+        thisVar.attributes['chosenArticle'] = 'none';
         thisVar.emit(':responseReady');
       }
     );
@@ -412,7 +410,7 @@ async function searchAndPlayArticleHelper(stateObj) {
 //Handler to get the titles for Alexa to read
 function getTitlesHelper(stateObj) {
   console.log('ScoutTitles');
-  stateObj.attributes['chosenArticle'] = '';
+  stateObj.attributes['chosenArticle'] = 'none';
   scout_agent.handle(stateObj.event).then(
     titles => {
       console.log('promise resolved');
@@ -499,12 +497,12 @@ function synthesisHelperUrl(stateObj) {
   console.log('synthesisHelperUrl');
 
   // Check to make sure that there is a chosen article first
-  if (stateObj.attributes['chosenArticle'] === '') {
+  if (stateObj.attributes['chosenArticle'] === 'none') {
     console.log('No chosenArticle.  User probably did not use an intent.');
     stateObj.response
       .speak(constants.strings.TITLE_SEARCH_MATCH_FAIL)
       .listen(constants.strings.TITLE_SEARCH_MATCH_FAIL);
-    stateObj.attributes['chosenArticle'] = '';
+    stateObj.attributes['chosenArticle'] = 'none';
     stateObj.emit(':responseReady');
   } else {
     const directiveServiceCall = callDirectiveService(stateObj.event).catch(
