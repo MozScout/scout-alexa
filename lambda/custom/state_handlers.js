@@ -226,8 +226,15 @@ var state_handlers = {
       },
       'AMAZON.RepeatIntent': function() {
         console.log('TITLES_DECISION_MODE:AMAZON.RepeatIntent');
+
         //Backup the title count.
-        this.attributes['titleCount'] -= constants.TITLE_CHUNK_LEN;
+        if (this.attributes['titleCount'] % constants.TITLE_CHUNK_LEN !== 0) {
+          this.attributes['titleCount'] -=
+            this.attributes['titleCount'] % constants.TITLE_CHUNK_LEN;
+        } else {
+          this.attributes['titleCount'] -= constants.TITLE_CHUNK_LEN;
+        }
+
         let respTitles = getTitleChunk(
           this.attributes['titles'].articles,
           this
@@ -251,7 +258,7 @@ var state_handlers = {
         );
         let message = '';
         if (!respTitles) {
-          message = constants.strings.TITLE_POCKET;
+          message = constants.strings.END_OF_TITLES;
         } else {
           message =
             'Here are the next titles: ' +
@@ -418,7 +425,6 @@ function getTitlesHelper(stateObj) {
       stateObj.attributes['titleCount'] = 0;
       stateObj.attributes['titles'] = titles;
       let respTitles = getTitleChunk(titles.articles, stateObj);
-      console.log(titles.articles);
       stateObj.response
         .speak(
           constants.strings.TITLE_ANN +
@@ -436,26 +442,28 @@ function getTitlesHelper(stateObj) {
 }
 
 function getTitleChunk(articleJson, stateObj) {
-  let retSpeech = '<break />';
-
   let curCount = stateObj.attributes['titleCount'];
   let arrChunk = Object.values(articleJson).slice(
     curCount,
     curCount + constants.TITLE_CHUNK_LEN
   );
-  console.log(arrChunk);
 
-  arrChunk.forEach(function(element, index) {
-    const cleanTitle = cleanStringForSsml(element.title);
-    console.log(`article title: ${cleanTitle}`);
+  if (arrChunk.length === 0) {
+    return '';
+  } else {
+    let retSpeech = '<break />';
+    arrChunk.forEach(function(element, index) {
+      const cleanTitle = cleanStringForSsml(element.title);
+      console.log(`article title: ${cleanTitle}`);
 
-    retSpeech = `${retSpeech} ${index + 1}. ${cleanTitle}. ${
-      element.lengthMinutes
-    } minutes.  `;
-  });
-  stateObj.attributes['titleCount'] += arrChunk.length;
+      retSpeech = `${retSpeech} ${index + 1}. ${cleanTitle}. ${
+        element.lengthMinutes
+      } minutes.  `;
+    });
+    stateObj.attributes['titleCount'] += arrChunk.length;
 
-  return retSpeech;
+    return retSpeech;
+  }
 }
 
 //Helper to get anything that needs to be
