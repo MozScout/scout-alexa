@@ -46,8 +46,8 @@ var state_handlers = {
         console.log('START_MODE:AMAZON.HelpIntent');
 
         this.response
-          .speak(constants.strings.WELCOME_MSG)
-          .listen(constants.strings.WELCOME_MSG);
+          .speak(constants.strings.START_HELP)
+          .listen(constants.strings.START_HELP);
         this.emit(':responseReady');
       },
       'AMAZON.StopIntent': function() {
@@ -71,6 +71,10 @@ var state_handlers = {
       SessionEndedRequest: function() {
         console.log('START_MODE:AMAZON.SessionEndedRequest');
         // No session ended logic
+      },
+      FinishedArticle: function() {
+        console.log('START_MODE:FinishedArticle');
+        this.emit(':saveState', true);
       },
       Unhandled: function() {
         console.log('START_MODE:Unhandled: ' + this.event.request.intent.name);
@@ -129,8 +133,9 @@ var state_handlers = {
     'AMAZON.HelpIntent': function() {
       console.log('PLAY_MODE:AMAZON.HelpIntent');
 
-      var message = constants.strings.WELCOME_MSG;
-      this.response.speak(message).listen(message);
+      this.response
+        .speak(constants.strings.START_HELP)
+        .listen(constants.strings.START_HELP);
       this.emit(':responseReady');
     },
     SessionEndedRequest: function() {
@@ -214,8 +219,9 @@ var state_handlers = {
       },
       'AMAZON.HelpIntent': function() {
         console.log('TITLES_DECISION_MODE:AMAZON.HelpIntent');
-        var message = constants.strings.TITLE_HELP;
-        this.response.speak(message).listen(message);
+        this.response
+          .speak(constants.strings.TITLE_HELP)
+          .listen(constants.strings.TITLE_HELP);
         this.emit(':responseReady');
       },
       'AMAZON.RepeatIntent': function() {
@@ -266,9 +272,7 @@ var state_handlers = {
         this.emit(':saveState', true);
       },
       Unhandled: function() {
-        console.log(
-          'TITLES_DECISION_MODE:Unhandled: ' + this.event.request.intent.name
-        );
+        console.log('TITLES_DECISION_MODE:Unhandled');
 
         var message =
           constants.strings.ERROR_UNEXPECTED_STATE +
@@ -431,7 +435,7 @@ async function searchAndPlayArticleHelper(stateObj) {
 //Handler to get the titles for Alexa to read
 function getTitlesHelper(stateObj) {
   console.log('ScoutTitles');
-  console.log('ChosenArticle is: ' + stateObj.attributes['chosenArticle']);
+  stateObj.attributes['chosenArticle'] = 'none';
   scout_agent.handle(stateObj.event).then(
     titles => {
       console.log('promise resolved');
@@ -518,12 +522,12 @@ function synthesisHelperUrl(stateObj) {
   console.log('synthesisHelperUrl');
 
   // Check to make sure that there is a chosen article first
-  if (stateObj.attributes['chosenArticle'] === '') {
+  if (stateObj.attributes['chosenArticle'] === 'none') {
     console.log('No chosenArticle.  User probably did not use an intent.');
     stateObj.response
       .speak(constants.strings.TITLE_SEARCH_MATCH_FAIL)
       .listen(constants.strings.TITLE_SEARCH_MATCH_FAIL);
-    stateObj.attributes['chosenArticle'] = '';
+    stateObj.attributes['chosenArticle'] = 'none';
     stateObj.emit(':responseReady');
   } else {
     const directiveServiceCall = callDirectiveService(stateObj.event).catch(

@@ -17,7 +17,8 @@ var audioEventHandlers = Alexa.CreateStateHandler(constants.states.PLAY_MODE, {
     this.emit(':saveState', true);
   },
   PlaybackFinished: function() {
-    this.emit(':saveState', true);
+    this.handler.state = constants.states.START_MODE;
+    this.emit('FinishedArticle');
   },
   PlaybackStopped: function() {
     /*
