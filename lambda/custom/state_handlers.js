@@ -256,18 +256,20 @@ var state_handlers = {
           this.attributes['titles'].articles,
           this
         );
-        let message = '';
+        let message;
+        let reprompt;
         if (!respTitles) {
-          message = constants.strings.END_OF_TITLES;
+          message = `${constants.strings.END_OF_TITLES} ${
+            constants.strings.TITLE_CHOICE_EXPLAIN
+          }`;
+          reprompt = constants.strings.TITLE_CHOICE_EXPLAIN;
         } else {
-          message =
-            'Here are the next titles: ' +
-            respTitles +
-            constants.strings.TITLE_CHOICE_EXPLAIN;
+          message = `${constants.strings.TITLE_PREFIX} ${respTitles} ${
+            constants.strings.TITLE_CHOICE_EXPLAIN
+          }`;
+          reprompt = constants.strings.TITLE_CHOICE_EXPLAIN_REPROMPT;
         }
-        this.response
-          .speak(message)
-          .listen(constants.strings.TITLE_CHOICE_EXPLAIN_REPROMPT);
+        this.response.speak(message).listen(reprompt);
 
         this.emit(':responseReady');
       },
