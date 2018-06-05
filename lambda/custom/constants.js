@@ -32,7 +32,8 @@ module.exports = Object.freeze({
       ' a few keywords. For example, say “Play the one about polar bears.” ' +
       'Say “Get my titles” to hear the first 5 articles in Pocket queue, ' +
       'next to hear another 5 and repeat to hear them again.',
-    TITLE_POCKET: 'No more titles in your queue.',
+    TITLE_PREFIX: 'Here are the next titles:',
+    END_OF_TITLES: 'There are no more titles in your queue.',
     TITLE_ANN: 'Here are your titles: ',
     TITLE_SEARCH_MATCH_FAIL:
       'Sorry, I couldn’t find a match.  Say Play followed by a few words in the title ' +
