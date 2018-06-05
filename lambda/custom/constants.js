@@ -21,8 +21,8 @@ module.exports = Object.freeze({
     TITLES_DECISION_MODE: '_TITLES_DECISION_MODE'
   },
   strings: {
-    WELCOME_MSG: 'Welcome to Scout. You can say, get titles to begin.',
-    WELCOME_REPROMPT: 'You can say, get my titles to begin.',
+    WELCOME_MSG: 'Welcome to Scout. To begin, say get titles.',
+    WELCOME_REPROMPT: 'Begin by saying get my titles.',
     START_HELP:
       'To listen to an article say “Play” followed by the title or' +
       ' a few keywords. For example, say “Play the one about polar bears.” ' +
