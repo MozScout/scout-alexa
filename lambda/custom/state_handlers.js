@@ -356,7 +356,8 @@ var scout_agent = (function() {
           uri: 'http://' + process.env.SCOUT_ADDR + '/command/' + synthType,
           body: JSON.stringify({
             userid: event.session.user.accessToken,
-            url: chosenArticle
+            url: chosenArticle,
+            end_instructions: 1
           }),
           method: 'POST',
           headers: {
@@ -527,6 +528,7 @@ function synthesisHelperUrl(stateObj) {
         url => {
           console.log('promise resolved: ' + url.url);
           stateObj.attributes['url'] = url.url;
+          stateObj.attributes['instructions_url'] = url.instructions_url;
           stateObj.attributes['offsetInMilliseconds'] = 0;
           audio_controller.play.call(stateObj);
         },

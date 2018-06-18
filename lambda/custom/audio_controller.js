@@ -25,7 +25,7 @@ var audio_controller = (function() {
         null,
         offsetInMilliseconds
       );
-
+      this.attributes['enqueue_token'] = token;
       this.emit(':responseReady');
     },
     stop: function() {
