@@ -382,28 +382,53 @@ var scout_agent = (function() {
 })();
 
 function matchArticleToTitlesHelper(stateObj) {
-  let searchTerm = getTitleFromSlotEvent(stateObj.event);
-  if (searchTerm) {
-    let thisVar = stateObj;
-    findBestScoringTitle(
-      searchTerm,
-      stateObj.attributes['titles'].articles
-    ).then(
-      function(article) {
-        thisVar.attributes['chosenArticle'] = article.resolved_url;
-        thisVar.response
-          .speak(constants.strings.TITLE_CHOOSE_SUMM_FULL)
-          .listen(constants.strings.TITLE_CHOICE_REPROMPT);
-        thisVar.emit(':responseReady');
-      },
-      function(rejectReason) {
-        thisVar.response
-          .speak(constants.strings.TITLE_SEARCH_MATCH_FAIL)
-          .listen(constants.strings.TITLE_SEARCH_MATCH_FAIL);
-        thisVar.attributes['chosenArticle'] = 'none';
-        thisVar.emit(':responseReady');
-      }
-    );
+  let id = getOrdinalIntent(stateObj.event);
+  if (id >= 0) {
+    console.log('Ordinal intent : ' + id);
+    if (id >= stateObj.attributes['titleCount']) {
+      // Three cases there :
+      // titleCount = 0
+      //  - and the user has non-empty pocket list, do we have to fetch titles?
+      //  - and the user has empty pocket list
+      // titleCount > 0 but the user asks for a too high id number
+      console.log('Error: asking for a higher id than articles');
+      stateObj.response
+        .speak(constants.strings.TITLE_SEARCH_MATCH_FAIL)
+        .listen(constants.strings.TITLE_SEARCH_MATCH_FAIL);
+      stateObj.attributes['chosenArticle'] = '';
+      stateObj.emit(':responseReady');
+    } else {
+      stateObj.attributes['chosenArticle'] =
+        stateObj.attributes['titles'].articles[id].resolved_url;
+      stateObj.response
+        .speak(constants.strings.TITLE_CHOOSE_SUMM_FULL)
+        .listen(constants.strings.TITLE_CHOICE_REPROMPT);
+      stateObj.emit(':responseReady');
+    }
+  } else {
+    let searchTerm = getTitleFromSlotEvent(stateObj.event);
+    if (searchTerm) {
+      let thisVar = stateObj;
+      findBestScoringTitle(
+        searchTerm,
+        stateObj.attributes['titles'].articles
+      ).then(
+        function(article) {
+          thisVar.attributes['chosenArticle'] = article.resolved_url;
+          thisVar.response
+            .speak(constants.strings.TITLE_CHOOSE_SUMM_FULL)
+            .listen(constants.strings.TITLE_CHOICE_REPROMPT);
+          thisVar.emit(':responseReady');
+        },
+        function(rejectReason) {
+          thisVar.response
+            .speak(constants.strings.TITLE_SEARCH_MATCH_FAIL)
+            .listen(constants.strings.TITLE_SEARCH_MATCH_FAIL);
+          thisVar.attributes['chosenArticle'] = '';
+          thisVar.emit(':responseReady');
+        }
+      );
+    }
   }
 }
 
@@ -554,13 +579,35 @@ function cleanStringForSsml(alexaString) {
   return cleanedString;
 }
 
+function getOrdinalIntent(event) {
+  let slots = event.request.intent.slots;
+  for (var p in slots) {
+    if (slots.hasOwnProperty(p)) {
+      if (p == 'Ordinal' && slots[p].value) {
+        let possibleIds = ['1', '2', '3', '4', '5'];
+        if (slots[p].resolutions.resolutionsPerAuthority[0].values) {
+          let id =
+            slots[p].resolutions.resolutionsPerAuthority[0].values[0].value.id;
+          if (id in possibleIds) {
+            return id;
+          }
+        } else {
+          // Intent is Ordinal but not a supported id
+          console.log('False positive: Ordinal detected but not a valid id');
+        }
+      }
+    }
+  }
+  return -1;
+}
+
 function getTitleFromSlotEvent(event) {
   let slots = event.request.intent.slots;
   let search = 0;
   for (var p in slots) {
     if (slots.hasOwnProperty(p)) {
       console.log(p + ': ' + slots[p].value);
-      if (p == 'CatchAllSlot') {
+      if (slots[p].value) {
         search = slots[p].value;
       }
     }

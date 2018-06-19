@@ -37,14 +37,32 @@
           "name": "SearchAndPlayArticle",
           "slots": [
             {
+              "name": "Ordinal",
+              "type": "Ordinal"
+            },
+            {
               "name": "CatchAllSlot",
               "type": "AMAZON.SearchQuery"
             }
           ],
           "samples": [
-            "play that article about {CatchAllSlot}",
             "play the article about {CatchAllSlot}",
-            "Play {CatchAllSlot}"
+            "play that article about {CatchAllSlot}",
+            "play that article on {CatchAllSlot}",
+            "play the article on {CatchAllSlot}",
+
+            "play the {Ordinal} article",
+            "play the {Ordinal} one",
+            "play the {Ordinal}",
+            "play {Ordinal}",
+
+            "play the article {Ordinal}",
+            "play the number {Ordinal}",
+            "play number {Ordinal}",
+
+            "play that {CatchAllSlot} article",
+            "play the {CatchAllSlot} article",
+            "play {CatchAllSlot}"
           ]
         },
         {
@@ -74,7 +92,48 @@
           "samples": ["entire story", "full article", "full story"]
         }
       ],
-      "types": []
+      "types": [
+        {
+          "name": "Ordinal",
+          "values": [
+            {
+              "id": "0",
+              "name": {
+                "value": "first",
+                "synonyms": ["one"]
+              }
+            },
+            {
+              "id": "1",
+              "name": {
+                "value": "second",
+                "synonyms": ["two"]
+              }
+            },
+            {
+              "id": "2",
+              "name": {
+                "value": "third",
+                "synonyms": ["three"]
+              }
+            },
+            {
+              "id": "3",
+              "name": {
+                "value": "fourth",
+                "synonyms": ["four"]
+              }
+            },
+            {
+              "id": "4",
+              "name": {
+                "value": "fifth",
+                "synonyms": ["five", "last"]
+              }
+            }
+          ]
+        }
+      ]
     }
   }
 }
