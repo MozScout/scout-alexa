@@ -17,14 +17,7 @@ var state_handlers = {
          */
       LaunchRequest: function() {
         console.log('START_MODE:LaunchRequest');
-        //  Change state to START_MODE
-        this.handler.state = constants.states.START_MODE;
-        this.attributes['offsetInMilliseconds'] = 0;
-
-        this.response
-          .speak(constants.strings.WELCOME_MSG)
-          .listen(constants.strings.WELCOME_REPROMPT);
-        this.emit(':responseReady');
+        launchHelper(this);
       },
       SearchAndPlayArticle: function() {
         console.log('START_MODE:SearchAndPlayArticle');
@@ -89,12 +82,7 @@ var state_handlers = {
     //Intent handlers for PLAY_MODE
     LaunchRequest: function() {
       console.log('PLAY_MODE:LaunchRequest');
-      this.handler.state = constants.states.START_MODE;
-
-      this.response
-        .speak(constants.strings.WELCOME_MSG)
-        .listen(constants.strings.WELCOME_REPROMPT);
-      this.emit(':responseReady');
+      launchHelper(this);
     },
     SearchAndPlayArticle: function() {
       console.log('PLAY_MODE:SearchAndPlayArticle');
@@ -168,12 +156,7 @@ var state_handlers = {
       //Intent handlers for TITLES_DECISION_MODE
       LaunchRequest: function() {
         console.log('TITLES_DECISION_MODE:LaunchRequest');
-        this.handler.state = constants.states.START_MODE;
-
-        this.response
-          .speak(constants.strings.WELCOME_MSG)
-          .listen(constants.strings.WELCOME_REPROMPT);
-        this.emit(':responseReady');
+        launchHelper(this);
       },
       'AMAZON.YesIntent': function() {
         console.log('TITLES_DECISION_MODE:AMAZON.YesIntent');
@@ -377,9 +360,58 @@ var scout_agent = (function() {
             reject('Scout Unavailable');
           });
       });
+    },
+    incrementUseCount: function(event) {
+      return new Promise((resolve, reject) => {
+        let scoutOptions = {
+          uri: 'http://' + process.env.SCOUT_ADDR + '/count',
+          body: JSON.stringify({
+            userid: event.session.user.accessToken,
+            use_date: Date.now()
+          }),
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json; charset=UTF-8',
+            'X-Accept': 'application/json',
+            Content: 'application/json',
+            'x-access-token': process.env.JWOT_TOKEN
+          }
+        };
+        console.log('incrementUseCount: ' + scoutOptions.body);
+        rp(scoutOptions)
+          .then(function(body) {
+            var jsonBody = JSON.parse(body);
+            resolve(jsonBody);
+          })
+          .catch(function(err) {
+            console.log('Scout unavailable');
+            reject('Scout Unavailable');
+          });
+      });
     }
   };
 })();
+
+async function launchHelper(stateObj) {
+  //  Change state to START_MODE
+  stateObj.handler.state = constants.states.START_MODE;
+  stateObj.attributes['offsetInMilliseconds'] = 0;
+  let useCount = await scout_agent.incrementUseCount(stateObj.event);
+  if (useCount.count == 1) {
+    stateObj.response
+      .speak(constants.strings.FTU_WELCOME_MSG)
+      .listen(constants.strings.WELCOME_REPROMPT);
+  } else if (useCount.count % 10 == 0) {
+    stateObj.response
+      .speak(constants.strings.LEVELUP_WELCOME_MSG)
+      .listen(constants.strings.WELCOME_REPROMPT);
+  } else {
+    stateObj.response
+      .speak(constants.strings.WELCOME_MSG)
+      .listen(constants.strings.WELCOME_REPROMPT);
+  }
+  stateObj.emit(':responseReady');
+}
 
 function matchArticleToTitlesHelper(stateObj) {
   let searchTerm = getTitleFromSlotEvent(stateObj.event);
