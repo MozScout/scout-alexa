@@ -302,7 +302,8 @@ var scout_agent = (function() {
       'Content-Type': 'application/json; charset=UTF-8',
       'X-Accept': 'application/json',
       Content: 'application/json',
-      'x-access-token': process.env.JWOT_TOKEN
+      'x-access-token': process.env.JWOT_TOKEN,
+      'User-Agent': constants.strings.USER_AGENT
     }
   };
 
@@ -363,7 +364,8 @@ var scout_agent = (function() {
             'Content-Type': 'application/json; charset=UTF-8',
             'X-Accept': 'application/json',
             Content: 'application/json',
-            'x-access-token': process.env.JWOT_TOKEN
+            'x-access-token': process.env.JWOT_TOKEN,
+            'User-Agent': constants.strings.USER_AGENT
           }
         };
 
