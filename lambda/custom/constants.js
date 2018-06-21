@@ -23,10 +23,6 @@ module.exports = Object.freeze({
   strings: {
     WELCOME_MSG: 'Welcome to Scout. To begin, say get titles.',
     WELCOME_REPROMPT: 'Begin by saying get my titles.',
-    LEVELUP_WELCOME_MSG:
-      'Welcome to Scout. ' +
-      "Congrats!!! You've leveled up! " +
-      'To begin, say get titles.',
     FTU_WELCOME_MSG:
       'Welcome to Scout. ' +
       'To listen to an article say “Play” followed by the title or' +

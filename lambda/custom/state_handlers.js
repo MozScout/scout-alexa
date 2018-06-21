@@ -401,10 +401,6 @@ async function launchHelper(stateObj) {
     stateObj.response
       .speak(constants.strings.FTU_WELCOME_MSG)
       .listen(constants.strings.WELCOME_REPROMPT);
-  } else if (useCount.count % 10 == 0) {
-    stateObj.response
-      .speak(constants.strings.LEVELUP_WELCOME_MSG)
-      .listen(constants.strings.WELCOME_REPROMPT);
   } else {
     stateObj.response
       .speak(constants.strings.WELCOME_MSG)
