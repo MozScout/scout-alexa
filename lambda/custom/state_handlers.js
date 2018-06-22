@@ -332,7 +332,7 @@ var scout_agent = (function() {
         let search = getTitleFromSlotEvent(event);
         let reqBody = {
           cmd: event.request.intent.name,
-          searchTerms: search,
+          search_terms: search,
           userid: event.session.user.accessToken
         };
         scoutOptions.body = JSON.stringify(reqBody);
@@ -461,7 +461,7 @@ function getTitleChunk(articleJson, stateObj) {
       console.log(`article title: ${cleanTitle}`);
 
       retSpeech = `${retSpeech} ${index + 1}. ${cleanTitle}. ${
-        element.lengthMinutes
+        element.length_minutes
       } minutes.  `;
     });
     stateObj.attributes['titleCount'] += arrChunk.length;
