@@ -68,6 +68,13 @@ var state_handlers = {
         console.log('PLAY_MODE:AMAZON.ResumeIntent');
         audio_controller.play.call(this);
       },
+      'AMAZON.RepeatIntent': function() {
+        console.log('START_MODE:AMAZON.RepeatIntent');
+        this.response
+          .speak(constants.strings.WELCOME_MSG)
+          .listen(constants.strings.WELCOME_REPROMPT);
+        this.emit(':responseReady');
+      },
       SessionEndedRequest: function() {
         console.log('START_MODE:AMAZON.SessionEndedRequest');
         // No session ended logic
@@ -408,7 +415,7 @@ function matchArticleToTitlesHelper(stateObj) {
 }
 
 async function searchAndPlayArticleHelper(stateObj) {
-  if (stateObj.event.session.new) {
+  if (stateObj.event.session.new || !stateObj.attributes['titles']) {
     const titles = await scout_agent.handleTitles(stateObj.event);
     stateObj.attributes['titles'] = titles;
   }
@@ -437,7 +444,7 @@ function getTitlesHelper(stateObj) {
       stateObj.emit(':responseReady');
     },
     error => {
-      stateObj.response.speak('Error Getting titles');
+      stateObj.response.speak(constants.strings.ERROR_GETTING_TITLES);
       stateObj.emit(':responseReady');
     }
   );

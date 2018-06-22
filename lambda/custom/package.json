@@ -4,17 +4,25 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "nyc --reporter=html --reporter=text mocha",
+    "travis": "nyc mocha && nyc report --reporter=text-lcov | coveralls"
   },
   "dependencies": {
     "alexa-sdk": "^1.0.25",
     "fuse": "^0.4.0",
-    "fuse.js": "^3.2.0",
+    "fuse.js": "^3.2.1",
     "natural": "0.5.1",
-    "request": "^2.83.0",
+    "request": "^2.87.0",
     "request-promise": "^4.2.2",
     "string-score": "^1.0.1"
   },
   "author": "Tamara Hills",
-  "license": "MPL-2.0"
+  "license": "MPL-2.0",
+  "devDependencies": {
+    "chai": "^4.1.2",
+    "coveralls": "^3.0.1",
+    "mocha": "^5.2.0",
+    "nyc": "^12.0.2",
+    "virtual-alexa": "^0.6.9"
+  }
 }

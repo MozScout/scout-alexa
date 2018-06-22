@@ -31,7 +31,7 @@
         {
           "name": "ScoutTitles",
           "slots": [],
-          "samples": ["get my titles", "titles"]
+          "samples": ["get my titles", "get titles", "titles"]
         },
         {
           "name": "SearchAndPlayArticle",
