@@ -82,7 +82,7 @@ var state_handlers = {
               0
             )
             .catch(function(err) {
-              console.log('Error during offset update:' + err);
+              console.log(`Error during offset update: ${err}`);
             });
         }
         this.emit(':saveState', true);
@@ -138,7 +138,7 @@ var state_handlers = {
             this.attributes['offsetInMilliseconds']
           )
           .catch(function(err) {
-            console.log('Error during offset update.');
+            console.log(`Error during offset update: ${err}`);
           });
       }
       this.emit(':saveState', true);
@@ -436,15 +436,10 @@ var scout_agent = (function() {
     updateArticleStatus: function(userId, articleId, offset) {
       return new Promise((resolve, reject) => {
         console.log(
-          'updateArticleStatus: ' +
-            articleId +
-            ' for ' +
-            userId +
-            '. Offset: ' +
-            offset
+          `updateArticleStatus: ${articleId} for ${userId}. Offset: ${offset}`
         );
         let scoutOptions = {
-          uri: 'http://' + process.env.SCOUT_ADDR + '/article-status/',
+          uri: `http://${process.env.SCOUT_ADDR}/article-status/`,
           method: 'POST',
           body: JSON.stringify({
             pocket_user_id: userId,
@@ -464,8 +459,8 @@ var scout_agent = (function() {
             resolve();
           })
           .catch(function(err) {
-            console.log('updateArticle unavailable');
-            reject('updateArticle Unavailable');
+            console.log(`updateArticle API unavailable: ${err}`);
+            reject(`updateArticle API unavailable: ${err}`);
           });
       });
     }
@@ -638,8 +633,7 @@ function synthesisHelperUrl(stateObj) {
         audio_controller.play.call(stateObj);
       })
       .catch(function(err) {
-        console.log('handleURL/Offset promise failed');
-        console.log(err);
+        console.log(`handleURL/Offset promise failed: ${err}`);
         stateObj.response.speak(constants.strings.ARTICLE_FAIL_MSG);
         stateObj.emit(':responseReady');
       });
