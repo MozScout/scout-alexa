@@ -302,7 +302,8 @@ var scout_agent = (function() {
       'Content-Type': 'application/json; charset=UTF-8',
       'X-Accept': 'application/json',
       Content: 'application/json',
-      'x-access-token': process.env.JWOT_TOKEN
+      'x-access-token': process.env.JWOT_TOKEN,
+      'User-Agent': constants.strings.USER_AGENT
     }
   };
 
@@ -331,7 +332,7 @@ var scout_agent = (function() {
         let search = getTitleFromSlotEvent(event);
         let reqBody = {
           cmd: event.request.intent.name,
-          searchTerms: search,
+          search_terms: search,
           userid: event.session.user.accessToken
         };
         scoutOptions.body = JSON.stringify(reqBody);
@@ -363,7 +364,8 @@ var scout_agent = (function() {
             'Content-Type': 'application/json; charset=UTF-8',
             'X-Accept': 'application/json',
             Content: 'application/json',
-            'x-access-token': process.env.JWOT_TOKEN
+            'x-access-token': process.env.JWOT_TOKEN,
+            'User-Agent': constants.strings.USER_AGENT
           }
         };
 
@@ -459,7 +461,7 @@ function getTitleChunk(articleJson, stateObj) {
       console.log(`article title: ${cleanTitle}`);
 
       retSpeech = `${retSpeech} ${index + 1}. ${cleanTitle}. ${
-        element.lengthMinutes
+        element.length_minutes
       } minutes.  `;
     });
     stateObj.attributes['titleCount'] += arrChunk.length;
