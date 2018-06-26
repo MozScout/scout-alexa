@@ -82,7 +82,7 @@ var state_handlers = {
               0
             )
             .catch(function(err) {
-              console.log('Error during offset update.');
+              console.log('Error during offset update:' + err);
             });
         }
         this.emit(':saveState', true);
@@ -402,15 +402,11 @@ var scout_agent = (function() {
     },
     getArticleStatus: function(userId, articleId) {
       return new Promise((resolve, reject) => {
-        console.log('getArticleStatus: ' + articleId + ' for ' + userId);
+        console.log(`getArticleStatus: ${articleId} for ${userId}`);
         let scoutOptions = {
-          uri:
-            'http://' +
-            process.env.SCOUT_ADDR +
-            '/article-status/' +
-            userId +
-            '/' +
-            articleId,
+          uri: `http://${
+            process.env.SCOUT_ADDR
+          }/article-status/${userId}/${articleId}`,
           method: 'GET',
           headers: {
             'Content-Type': 'application/json; charset=UTF-8',
@@ -612,22 +608,22 @@ function synthesisHelperUrl(stateObj) {
       }
     );
     console.log('Chosen Article is: ' + stateObj.attributes['chosenArticle']);
-    const getArticle = scout_agent.handleUrl(
+    const article = scout_agent.handleUrl(
       stateObj.attributes['chosenArticle'],
       stateObj.event
     );
     stateObj.attributes['full'] =
       stateObj.event.request.intent.name == 'fullarticle';
     stateObj.attributes['userId'] = stateObj.event.session.user.accessToken;
-    let getOffset;
+    let offset;
     if (stateObj.attributes['full']) {
-      getOffset = scout_agent.getArticleStatus(
+      offset = scout_agent.getArticleStatus(
         stateObj.event.session.user.accessToken,
         stateObj.attributes['articleId']
       );
     }
 
-    Promise.all([getArticle, getOffset])
+    Promise.all([article, offset])
       .then(function(values) {
         let url = values[0];
         console.log('promise resolved: ' + url.url);
@@ -643,7 +639,7 @@ function synthesisHelperUrl(stateObj) {
         stateObj.emit(':responseReady');
       });
 
-    Promise.all([directiveServiceCall, getArticle]).then(function(values) {
+    Promise.all([directiveServiceCall, article]).then(function(values) {
       console.log(values);
     });
   }
