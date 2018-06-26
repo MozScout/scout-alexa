@@ -30,7 +30,8 @@ var audioEventHandlers = Alexa.CreateStateHandler(constants.states.PLAY_MODE, {
     this.attributes['offsetInMilliseconds'] = getOffsetInMilliseconds.call(
       this
     );
-    this.emit(':saveState', true);
+    this.handler.state = constants.states.PLAY_MODE;
+    this.emitWithState('StoppedArticle');
   },
 
   PlaybackNearlyFinished: function() {

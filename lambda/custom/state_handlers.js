@@ -126,10 +126,14 @@ var state_handlers = {
     'AMAZON.PauseIntent': function() {
       console.log('PLAY_MODE:AMAZON.PauseIntent');
       audio_controller.stop.call(this);
+      this.emit('StoppedArticle');
+    },
+    StoppedArticle: function() {
+      console.log('PLAY_MODE:StoppedArticle');
       if (this.attributes['full']) {
         scout_agent
           .updateArticleStatus(
-            this.event.session.user.accessToken,
+            this.attributes['userId'],
             this.attributes['articleId'],
             this.attributes['offsetInMilliseconds']
           )
@@ -137,6 +141,7 @@ var state_handlers = {
             console.log('Error during offset update.');
           });
       }
+      this.emit(':saveState', true);
     },
     'AMAZON.ResumeIntent': function() {
       console.log('PLAY_MODE:AMAZON.ResumeIntent');
