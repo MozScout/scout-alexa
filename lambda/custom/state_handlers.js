@@ -405,34 +405,6 @@ var scout_agent = (function() {
           });
       });
     },
-    getArticleStatus: function(userId, articleId) {
-      return new Promise((resolve, reject) => {
-        console.log(`getArticleStatus: ${articleId} for ${userId}`);
-        let scoutOptions = {
-          uri: `http://${
-            process.env.SCOUT_ADDR
-          }/article-status/${userId}/${articleId}`,
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json; charset=UTF-8',
-            'X-Accept': 'application/json',
-            Content: 'application/json',
-            'x-access-token': process.env.JWOT_TOKEN
-          }
-        };
-
-        rp(scoutOptions)
-          .then(function(body) {
-            var jsonBody = JSON.parse(body);
-            resolve(jsonBody);
-          })
-          .catch(function(err) {
-            // error = 404, no offset found
-            console.log('no offset available');
-            resolve();
-          });
-      });
-    },
     updateArticleStatus: function(userId, articleId, offset) {
       return new Promise((resolve, reject) => {
         console.log(
@@ -608,32 +580,19 @@ function synthesisHelperUrl(stateObj) {
       }
     );
     console.log('Chosen Article is: ' + stateObj.attributes['chosenArticle']);
-    const article = scout_agent.handleUrl(
-      stateObj.attributes['chosenArticle'],
-      stateObj.event
-    );
     stateObj.attributes['full'] =
       stateObj.event.request.intent.name == 'fullarticle';
     stateObj.attributes['userId'] = stateObj.event.session.user.accessToken;
-    let offset;
-    if (stateObj.attributes['full']) {
-      offset = scout_agent.getArticleStatus(
-        stateObj.event.session.user.accessToken,
-        stateObj.attributes['articleId']
-      );
-    }
-
-    Promise.all([article, offset])
-      .then(function(values) {
-        let url = values[0];
-        console.log('promise resolved: ' + url.url);
-        stateObj.attributes['url'] = url.url;
-        stateObj.attributes['offsetInMilliseconds'] =
-          values[1] && values[1].offset_ms ? values[1].offset_ms : 0;
+    const article = scout_agent
+      .handleUrl(stateObj.attributes['chosenArticle'], stateObj.event)
+      .then(function(article) {
+        console.log('promise resolved: ' + article.url);
+        stateObj.attributes['url'] = article.url;
+        stateObj.attributes['offsetInMilliseconds'] = article.offset_ms;
         audio_controller.play.call(stateObj);
       })
       .catch(function(err) {
-        console.log(`handleURL/Offset promise failed: ${err}`);
+        console.log(`handleURL promise failed: ${err}`);
         stateObj.response.speak(constants.strings.ARTICLE_FAIL_MSG);
         stateObj.emit(':responseReady');
       });
