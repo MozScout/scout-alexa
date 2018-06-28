@@ -1,6 +1,6 @@
 var https = require('https');
 var rp = require('request-promise');
-var Alexa = require('alexa-sdk');
+var Alexa = require('ask-sdk-v1adapter');
 var constants = require('./constants');
 var stateHandlers = require('./state_handlers');
 var audioEventHandlers = require('./audioEventHandlers');
