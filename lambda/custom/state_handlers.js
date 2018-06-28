@@ -74,10 +74,21 @@ var state_handlers = {
       },
       FinishedArticle: function() {
         console.log('START_MODE:FinishedArticle');
+        if (this.attributes['full']) {
+          scout_agent
+            .updateArticleStatus(
+              this.attributes['userId'],
+              this.attributes['articleId'],
+              0
+            )
+            .catch(function(err) {
+              console.log(`Error during offset update: ${err}`);
+            });
+        }
         this.emit(':saveState', true);
       },
       Unhandled: function() {
-        console.log('START_MODE:Unhandled: ' + this.event.request.intent.name);
+        console.log('START_MODE:Unhandled');
         this.response
           .speak(constants.strings.ERROR_UNHANDLED_STATE)
           .listen(constants.strings.ERROR_UNHANDLED_STATE);
@@ -115,6 +126,22 @@ var state_handlers = {
     'AMAZON.PauseIntent': function() {
       console.log('PLAY_MODE:AMAZON.PauseIntent');
       audio_controller.stop.call(this);
+      this.emit('StoppedArticle');
+    },
+    StoppedArticle: function() {
+      console.log('PLAY_MODE:StoppedArticle');
+      if (this.attributes['full']) {
+        scout_agent
+          .updateArticleStatus(
+            this.attributes['userId'],
+            this.attributes['articleId'],
+            this.attributes['offsetInMilliseconds']
+          )
+          .catch(function(err) {
+            console.log(`Error during offset update: ${err}`);
+          });
+      }
+      this.emit(':saveState', true);
     },
     'AMAZON.ResumeIntent': function() {
       console.log('PLAY_MODE:AMAZON.ResumeIntent');
@@ -148,7 +175,7 @@ var state_handlers = {
       this.emit(':saveState', true);
     },
     Unhandled: function() {
-      console.log('PLAY_MODE:Unhandled: ' + this.event.request.intent.name);
+      console.log('PLAY_MODE:Unhandled');
 
       this.response
         .speak(constants.strings.PLAY_MODE_UNHANDLED)
@@ -379,6 +406,37 @@ var scout_agent = (function() {
             reject('Scout Unavailable');
           });
       });
+    },
+    updateArticleStatus: function(userId, articleId, offset) {
+      return new Promise((resolve, reject) => {
+        console.log(
+          `updateArticleStatus: ${articleId} for ${userId}. Offset: ${offset}`
+        );
+        let scoutOptions = {
+          uri: `http://${process.env.SCOUT_ADDR}/article-status/`,
+          method: 'POST',
+          body: JSON.stringify({
+            pocket_user_id: userId,
+            article_id: articleId,
+            offset_ms: offset
+          }),
+          headers: {
+            'Content-Type': 'application/json; charset=UTF-8',
+            'X-Accept': 'application/json',
+            Content: 'application/json',
+            'x-access-token': process.env.JWOT_TOKEN
+          }
+        };
+
+        rp(scoutOptions)
+          .then(function(body) {
+            resolve();
+          })
+          .catch(function(err) {
+            console.log(`updateArticle API unavailable: ${err}`);
+            reject(`updateArticle API unavailable: ${err}`);
+          });
+      });
     }
   };
 })();
@@ -393,6 +451,7 @@ function matchArticleToTitlesHelper(stateObj) {
     ).then(
       function(article) {
         thisVar.attributes['chosenArticle'] = article.resolved_url;
+        thisVar.attributes['articleId'] = article.item_id;
         thisVar.response
           .speak(constants.strings.TITLE_CHOOSE_SUMM_FULL)
           .listen(constants.strings.TITLE_CHOICE_REPROMPT);
@@ -523,23 +582,24 @@ function synthesisHelperUrl(stateObj) {
       }
     );
     console.log('Chosen Article is: ' + stateObj.attributes['chosenArticle']);
-    const getArticle = scout_agent
+    stateObj.attributes['full'] =
+      stateObj.event.request.intent.name == 'fullarticle';
+    stateObj.attributes['userId'] = stateObj.event.session.user.accessToken;
+    const article = scout_agent
       .handleUrl(stateObj.attributes['chosenArticle'], stateObj.event)
-      .then(
-        url => {
-          console.log('promise resolved: ' + url.url);
-          stateObj.attributes['url'] = url.url;
-          stateObj.attributes['offsetInMilliseconds'] = 0;
-          audio_controller.play.call(stateObj);
-        },
-        error => {
-          console.log('handleURL promise failed');
-          stateObj.response.speak(constants.strings.ARTICLE_FAIL_MSG);
-          stateObj.emit(':responseReady');
-        }
-      );
+      .then(function(article) {
+        console.log('promise resolved: ' + article.url);
+        stateObj.attributes['url'] = article.url;
+        stateObj.attributes['offsetInMilliseconds'] = article.offset_ms;
+        audio_controller.play.call(stateObj);
+      })
+      .catch(function(err) {
+        console.log(`handleURL promise failed: ${err}`);
+        stateObj.response.speak(constants.strings.ARTICLE_FAIL_MSG);
+        stateObj.emit(':responseReady');
+      });
 
-    Promise.all([directiveServiceCall, getArticle]).then(function(values) {
+    Promise.all([directiveServiceCall, article]).then(function(values) {
       console.log(values);
     });
   }
