@@ -1,6 +1,6 @@
 'use strict';
 
-var Alexa = require('alexa-sdk');
+var Alexa = require('ask-sdk-v1adapter');
 var constants = require('./constants');
 const logger = require('./logger');
 

@@ -1,6 +1,6 @@
 'use strict';
 
-var Alexa = require('alexa-sdk');
+var Alexa = require('ask-sdk-v1adapter');
 var https = require('https');
 var rp = require('request-promise');
 var audio_controller = require('./audio_controller');
