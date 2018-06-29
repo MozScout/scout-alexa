@@ -521,7 +521,7 @@ function getTitleChunk(articleJson, stateObj) {
 
       retSpeech = `${retSpeech} ${index + 1}. ${cleanTitle}. ${
         element.length_minutes
-      } minutes.  `;
+      } minute${element.length_minutes === 1 ? '' : 's'}.  `;
     });
     stateObj.attributes['titleCount'] += arrChunk.length;
 
