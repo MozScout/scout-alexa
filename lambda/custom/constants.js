@@ -57,7 +57,8 @@ module.exports = Object.freeze({
     PLAY_MODE_UNHANDLED:
       'Sorry, I could not understand that.  ' +
       'You can say pause or resume or stop to control the audio',
-    WAIT_ARTICLE: 'One moment while I get that ready for you...'
+    WAIT_ARTICLE: 'One moment while I get that ready for you...',
+    USER_AGENT: 'Alexa Skill'
   },
   TITLE_CHUNK_LEN: 5,
 
