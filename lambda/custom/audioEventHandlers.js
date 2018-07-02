@@ -39,7 +39,7 @@ var audioEventHandlers = Alexa.CreateStateHandler(constants.states.PLAY_MODE, {
     this.emit(':saveState', true);
   },
   PlaybackFailed: function() {
-    logger.error('Playback Failed : %j', this.event.request.error);
+    logger.error('Playback Failed: ' + this.event.request.error);
     this.context.succeed({});
   }
 });
