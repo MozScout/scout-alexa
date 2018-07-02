@@ -5,6 +5,9 @@
 
 This is a lambda function that drives the Alexa skill for Scout.
 
+Uses [Alexa Skills Kit SDK for Node.js](https://github.com/alexa/alexa-skills-kit-sdk-for-nodejs) v2.
+Backwards compatibility with v1: see [ASK SDK Migration Guide](https://github.com/alexa/alexa-skills-kit-sdk-for-nodejs/wiki/ASK-SDK-Migration-Guide).
+
 ## Setting up
 
 Requirements: [scout-ua](https://github.com/MozScout/scout-ua), Auth Lamdba Functions and Auth API Gateways are deployed.
