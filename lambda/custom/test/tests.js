@@ -12,26 +12,6 @@ alexa.context().setAccessToken('scoutskilltest@mailinator.com');
 
 const checkStreamingString = '.mp3';
 
-const util = require('util');
-const fs = require('fs');
-const log = fs.createWriteStream('./stdout.log');
-
-const DISABLE_STDOUT = true;
-// hide console.log outputs
-if (DISABLE_STDOUT) {
-  console.log = console.info = function(t) {
-    var out;
-    if (t && ~t.indexOf('%')) {
-      out = util.format.apply(util, arguments);
-      process.stdout.write(out + '\n');
-      return;
-    } else {
-      out = Array.prototype.join.call(arguments, ' ');
-    }
-    out && log.write(out + '\n');
-  };
-}
-
 describe('Unit Tests', function() {
   this.timeout(120 * 1000);
   it('Launch Prompt', async () => {
