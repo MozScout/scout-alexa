@@ -1,6 +1,6 @@
 'use strict';
 
-var Alexa = require('alexa-sdk');
+var Alexa = require('ask-sdk-v1adapter');
 var https = require('https');
 var rp = require('request-promise');
 var audio_controller = require('./audio_controller');
@@ -75,10 +75,21 @@ var state_handlers = {
       },
       FinishedArticle: function() {
         logger.info('START_MODE:FinishedArticle');
+        if (this.attributes['full']) {
+          scout_agent
+            .updateArticleStatus(
+              this.attributes['userId'],
+              this.attributes['articleId'],
+              0
+            )
+            .catch(function(err) {
+              logger.error(`Error during offset update: ${err}`);
+            });
+        }
         this.emit(':saveState', true);
       },
       Unhandled: function() {
-        logger.info('START_MODE:Unhandled: ' + this.event.request.intent.name);
+        logger.info('START_MODE:Unhandled');
         this.response
           .speak(constants.strings.ERROR_UNHANDLED_STATE)
           .listen(constants.strings.ERROR_UNHANDLED_STATE);
@@ -116,6 +127,22 @@ var state_handlers = {
     'AMAZON.PauseIntent': function() {
       logger.info('PLAY_MODE:AMAZON.PauseIntent');
       audio_controller.stop.call(this);
+      this.emit('StoppedArticle');
+    },
+    StoppedArticle: function() {
+      console.log('PLAY_MODE:StoppedArticle');
+      if (this.attributes['full']) {
+        scout_agent
+          .updateArticleStatus(
+            this.attributes['userId'],
+            this.attributes['articleId'],
+            this.attributes['offsetInMilliseconds']
+          )
+          .catch(function(err) {
+            console.log(`Error during offset update: ${err}`);
+          });
+      }
+      this.emit(':saveState', true);
     },
     'AMAZON.ResumeIntent': function() {
       logger.info('PLAY_MODE:AMAZON.ResumeIntent');
@@ -149,7 +176,7 @@ var state_handlers = {
       this.emit(':saveState', true);
     },
     Unhandled: function() {
-      logger.info('PLAY_MODE:Unhandled: ' + this.event.request.intent.name);
+      logger.info('PLAY_MODE:Unhandled');
 
       this.response
         .speak(constants.strings.PLAY_MODE_UNHANDLED)
@@ -380,6 +407,37 @@ var scout_agent = (function() {
             reject('Scout Unavailable');
           });
       });
+    },
+    updateArticleStatus: function(userId, articleId, offset) {
+      return new Promise((resolve, reject) => {
+        console.log(
+          `updateArticleStatus: ${articleId} for ${userId}. Offset: ${offset}`
+        );
+        let scoutOptions = {
+          uri: `http://${process.env.SCOUT_ADDR}/article-status/`,
+          method: 'POST',
+          body: JSON.stringify({
+            pocket_user_id: userId,
+            article_id: articleId,
+            offset_ms: offset
+          }),
+          headers: {
+            'Content-Type': 'application/json; charset=UTF-8',
+            'X-Accept': 'application/json',
+            Content: 'application/json',
+            'x-access-token': process.env.JWOT_TOKEN
+          }
+        };
+
+        rp(scoutOptions)
+          .then(function(body) {
+            resolve();
+          })
+          .catch(function(err) {
+            console.log(`updateArticle API unavailable: ${err}`);
+            reject(`updateArticle API unavailable: ${err}`);
+          });
+      });
     }
   };
 })();
@@ -394,6 +452,7 @@ function matchArticleToTitlesHelper(stateObj) {
     ).then(
       function(article) {
         thisVar.attributes['chosenArticle'] = article.resolved_url;
+        thisVar.attributes['articleId'] = article.item_id;
         thisVar.response
           .speak(constants.strings.TITLE_CHOOSE_SUMM_FULL)
           .listen(constants.strings.TITLE_CHOICE_REPROMPT);
@@ -463,7 +522,7 @@ function getTitleChunk(articleJson, stateObj) {
 
       retSpeech = `${retSpeech} ${index + 1}. ${cleanTitle}. ${
         element.length_minutes
-      } minutes.  `;
+      } minute${element.length_minutes === 1 ? '' : 's'}.  `;
     });
     stateObj.attributes['titleCount'] += arrChunk.length;
 
@@ -524,23 +583,24 @@ function synthesisHelperUrl(stateObj) {
       }
     );
     logger.info('Chosen Article is: ' + stateObj.attributes['chosenArticle']);
-    const getArticle = scout_agent
+    stateObj.attributes['full'] =
+      stateObj.event.request.intent.name == 'fullarticle';
+    stateObj.attributes['userId'] = stateObj.event.session.user.accessToken;
+    const article = scout_agent
       .handleUrl(stateObj.attributes['chosenArticle'], stateObj.event)
-      .then(
-        url => {
-          logger.debug('promise resolved: ' + url.url);
-          stateObj.attributes['url'] = url.url;
-          stateObj.attributes['offsetInMilliseconds'] = 0;
-          audio_controller.play.call(stateObj);
-        },
-        error => {
-          logger.error('handleURL promise failed');
-          stateObj.response.speak(constants.strings.ARTICLE_FAIL_MSG);
-          stateObj.emit(':responseReady');
-        }
-      );
+      .then(function(article) {
+        logger.debug('promise resolved: ' + article.url);
+        stateObj.attributes['url'] = article.url;
+        stateObj.attributes['offsetInMilliseconds'] = article.offset_ms;
+        audio_controller.play.call(stateObj);
+      })
+      .catch(function(err) {
+        logger.error(`handleURL promise failed: ${err}`);
+        stateObj.response.speak(constants.strings.ARTICLE_FAIL_MSG);
+        stateObj.emit(':responseReady');
+      });
 
-    Promise.all([directiveServiceCall, getArticle]).then(function(values) {
+    Promise.all([directiveServiceCall, article]).then(function(values) {
       logger.debug(values);
     });
   }
