@@ -323,7 +323,7 @@ var state_handlers = {
 
 var scout_agent = (function() {
   const scoutOptions = {
-    uri: 'http://' + process.env.SCOUT_ADDR + '/command/intent',
+    uri: 'https://' + process.env.SCOUT_ADDR + '/command/intent',
     method: 'POST',
     body: '',
     headers: {
@@ -382,7 +382,7 @@ var scout_agent = (function() {
           event.request.intent.name == 'skim' ? 'summary' : 'article';
         logger.debug('synth type is: ' + synthType);
         let scoutOptions = {
-          uri: 'http://' + process.env.SCOUT_ADDR + '/command/' + synthType,
+          uri: 'https://' + process.env.SCOUT_ADDR + '/command/' + synthType,
           body: JSON.stringify({
             userid: event.session.user.accessToken,
             url: chosenArticle
@@ -414,7 +414,7 @@ var scout_agent = (function() {
           `updateArticleStatus: ${articleId} for ${userId}. Offset: ${offset}`
         );
         let scoutOptions = {
-          uri: `http://${process.env.SCOUT_ADDR}/article-status/`,
+          uri: `https://${process.env.SCOUT_ADDR}/article-status/`,
           method: 'POST',
           body: JSON.stringify({
             pocket_user_id: userId,
