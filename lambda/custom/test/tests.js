@@ -3,7 +3,13 @@ AWS.config.update({ region: 'us-east-1' });
 const assert = require('chai').assert;
 const vax = require('virtual-alexa');
 const constants = require('../constants');
-// You need to setup the same ENV var as the Lambda function
+const logger = require('../logger');
+
+if (!process.env.SCOUT_ADDR || !process.env.JWOT_TOKEN) {
+  logger.error('No env vars found.');
+  throw new Error('No env vars found. Please add SCOUT_ADDR and JWOT_TOKEN.');
+}
+
 const alexa = vax.VirtualAlexa.Builder()
   .handler('index.handler') // Lambda function file and name
   .interactionModelFile('../../models/en-US.json')
@@ -12,7 +18,7 @@ alexa.context().setAccessToken('scoutskilltest@mailinator.com');
 
 const checkStreamingString = '.mp3';
 
-describe('Unit Tests', function() {
+describe('Integration Tests', function() {
   this.timeout(120 * 1000);
   it('Launch Prompt', async () => {
     let result = await alexa.launch();
@@ -102,11 +108,6 @@ describe('Unit Tests', function() {
     result = await alexa.utter('Pause');
     assert.isNotTrue(alexa.audioPlayer().isPlaying());
   });
-  /*it('Resume', async () => {
-    let result = await alexa.launch();
-    result = await alexa.utter('Resume');
-    assert.isTrue(alexa.audioPlayer().isPlaying());
-  });*/
   it('Cancel', async () => {
     let result = await alexa.launch();
     result = await alexa.utter('Cancel');
@@ -504,7 +505,6 @@ describe('Integration Tests', function() {
       assert.isTrue(alexa.audioPlayer().isPlaying());
 
       result = await alexa.utter('get titles');
-      //assert.isNotTrue(alexa.audioPlayer().isPlaying());
       assert.include(result.prompt(), constants.strings.TITLE_ANN);
 
       await alexa.audioPlayer().playbackFinished();
@@ -531,17 +531,8 @@ describe('Integration Tests', function() {
       assert.isTrue(alexa.audioPlayer().isPlaying());
 
       result = await alexa.utter('Play Donald Trump');
-      //assert.isNotTrue(alexa.audioPlayer().isPlaying());
       assert.include(result.prompt(), constants.strings.TITLE_CHOOSE_SUMM_FULL);
       result = await alexa.utter('full article');
-      /*assert.include(
-        result.response.directives[0].audioItem.stream.url,
-        checkStreamingString
-      );
-      assert.notEqual(
-        result.response.directives[0].audioItem.stream.url,
-        firstArticle
-      );*/
       assert.isTrue(alexa.audioPlayer().isPlaying());
 
       await alexa.audioPlayer().playbackFinished();
