@@ -1,7 +1,7 @@
 # Scout Alexa Skill
 
 [![Build Status](https://travis-ci.org/MozScout/scout-alexa.svg?branch=master)](https://travis-ci.org/MozScout/scout-alexa)
-[![Coverage Status](https://coveralls.io/repos/github/MozScout/scout-alexa/badge.svg?branch=master)](https://coveralls.io/github/BScong/scout-alexa?branch=master)
+[![Coverage Status](https://coveralls.io/repos/github/MozScout/scout-alexa/badge.svg?branch=master)](https://coveralls.io/github/MozScout/scout-alexa?branch=master)
 
 This is a lambda function that drives the Alexa skill for Scout.
 
