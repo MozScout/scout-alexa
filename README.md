@@ -66,4 +66,7 @@ In Skills/Your Skills/Dev Skill you should see your Skill in development. Enable
 ## Testing
 
 Testing using [Bespoken virtual-alexa](https://github.com/bespoken/virtual-alexa).
+
+To run tests, you need to have the environment variables `JWOT_TOKEN` and `SCOUT_ADDR`. You also need to have AWS credentials.
+
 To run tests manually: `npm test`
