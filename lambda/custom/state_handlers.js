@@ -1,12 +1,13 @@
 'use strict';
 
-var Alexa = require('alexa-sdk');
+var Alexa = require('ask-sdk-v1adapter');
 var https = require('https');
 var rp = require('request-promise');
 var audio_controller = require('./audio_controller');
 var constants = require('./constants');
 var natural = require('natural');
 var TfIdf = natural.TfIdf;
+const logger = require('./logger');
 
 var state_handlers = {
   startModeIntentHandlers: Alexa.CreateStateHandler(
@@ -16,7 +17,7 @@ var state_handlers = {
          *  All Intent Handlers for state : START_MODE
          */
       LaunchRequest: function() {
-        console.log('START_MODE:LaunchRequest');
+        logger.info('START_MODE:LaunchRequest');
         //  Change state to START_MODE
         this.handler.state = constants.states.START_MODE;
         this.attributes['offsetInMilliseconds'] = 0;
@@ -27,23 +28,23 @@ var state_handlers = {
         this.emit(':responseReady');
       },
       SearchAndPlayArticle: function() {
-        console.log('START_MODE:SearchAndPlayArticle');
+        logger.info('START_MODE:SearchAndPlayArticle');
         searchAndPlayArticleHelper(this);
       },
       SearchAndSummarizeArticle: function() {
-        console.log('START_MODE:SearchAndSummarizeArticle');
+        logger.info('START_MODE:SearchAndSummarizeArticle');
         synthesisHelper(this);
       },
       ScoutMyPocket: function() {
-        console.log('START_MODE:ScoutMyPocket');
+        logger.info('START_MODE:ScoutMyPocket');
         synthesisHelper(this);
       },
       ScoutTitles: function() {
-        console.log('START_MODE:ScoutTitles');
+        logger.info('START_MODE:ScoutTitles');
         getTitlesHelper(this);
       },
       'AMAZON.HelpIntent': function() {
-        console.log('START_MODE:AMAZON.HelpIntent');
+        logger.info('START_MODE:AMAZON.HelpIntent');
 
         this.response
           .speak(constants.strings.START_HELP)
@@ -51,33 +52,51 @@ var state_handlers = {
         this.emit(':responseReady');
       },
       'AMAZON.StopIntent': function() {
-        console.log('START_MODE:AMAZON.StopIntent');
+        logger.info('START_MODE:AMAZON.StopIntent');
         this.response.speak(constants.strings.ALEXA_STOP_RESP);
         this.emit(':responseReady');
       },
       'AMAZON.CancelIntent': function() {
-        console.log('START_MODE:AMAZON.CancelIntent');
+        logger.info('START_MODE:AMAZON.CancelIntent');
         this.response.speak(constants.strings.ALEXA_STOP_RESP);
         this.emit(':responseReady');
       },
       'AMAZON.PauseIntent': function() {
-        console.log('PLAY_MODE:AMAZON.PauseIntent');
+        logger.info('START_MODE:AMAZON.PauseIntent');
         audio_controller.stop.call(this);
       },
       'AMAZON.ResumeIntent': function() {
-        console.log('PLAY_MODE:AMAZON.ResumeIntent');
+        logger.info('START_MODE:AMAZON.ResumeIntent');
         audio_controller.play.call(this);
       },
+      'AMAZON.RepeatIntent': function() {
+        console.log('START_MODE:AMAZON.RepeatIntent');
+        this.response
+          .speak(constants.strings.WELCOME_MSG)
+          .listen(constants.strings.WELCOME_REPROMPT);
+        this.emit(':responseReady');
+      },
       SessionEndedRequest: function() {
-        console.log('START_MODE:AMAZON.SessionEndedRequest');
+        logger.info('START_MODE:AMAZON.SessionEndedRequest');
         // No session ended logic
       },
       FinishedArticle: function() {
-        console.log('START_MODE:FinishedArticle');
+        logger.info('START_MODE:FinishedArticle');
+        if (this.attributes['full']) {
+          scout_agent
+            .updateArticleStatus(
+              this.attributes['userId'],
+              this.attributes['articleId'],
+              0
+            )
+            .catch(function(err) {
+              logger.error(`Error during offset update: ${err}`);
+            });
+        }
         this.emit(':saveState', true);
       },
       Unhandled: function() {
-        console.log('START_MODE:Unhandled: ' + this.event.request.intent.name);
+        logger.info('START_MODE:Unhandled');
         this.response
           .speak(constants.strings.ERROR_UNHANDLED_STATE)
           .listen(constants.strings.ERROR_UNHANDLED_STATE);
@@ -88,7 +107,7 @@ var state_handlers = {
   playModeIntentHandlers: Alexa.CreateStateHandler(constants.states.PLAY_MODE, {
     //Intent handlers for PLAY_MODE
     LaunchRequest: function() {
-      console.log('PLAY_MODE:LaunchRequest');
+      logger.info('PLAY_MODE:LaunchRequest');
       this.handler.state = constants.states.START_MODE;
 
       this.response
@@ -97,41 +116,57 @@ var state_handlers = {
       this.emit(':responseReady');
     },
     SearchAndPlayArticle: function() {
-      console.log('PLAY_MODE:SearchAndPlayArticle');
+      logger.info('PLAY_MODE:SearchAndPlayArticle');
       searchAndPlayArticleHelper(this);
     },
     SearchAndSummarizeArticle: function() {
-      console.log('PLAY_MODE:SearchAndSummarizeArticle');
+      logger.info('PLAY_MODE:SearchAndSummarizeArticle');
       synthesisHelper(this);
     },
     ScoutMyPocket: function() {
-      console.log('PLAY_MODE:ScoutMyPocket');
+      logger.info('PLAY_MODE:ScoutMyPocket');
       synthesisHelper(this);
     },
     ScoutTitles: function() {
-      console.log('PLAY_MODE:ScoutTitles');
+      logger.info('PLAY_MODE:ScoutTitles');
       getTitlesHelper(this);
     },
     'AMAZON.PauseIntent': function() {
-      console.log('PLAY_MODE:AMAZON.PauseIntent');
+      logger.info('PLAY_MODE:AMAZON.PauseIntent');
       audio_controller.stop.call(this);
+      this.emit('StoppedArticle');
+    },
+    StoppedArticle: function() {
+      console.log('PLAY_MODE:StoppedArticle');
+      if (this.attributes['full']) {
+        scout_agent
+          .updateArticleStatus(
+            this.attributes['userId'],
+            this.attributes['articleId'],
+            this.attributes['offsetInMilliseconds']
+          )
+          .catch(function(err) {
+            console.log(`Error during offset update: ${err}`);
+          });
+      }
+      this.emit(':saveState', true);
     },
     'AMAZON.ResumeIntent': function() {
-      console.log('PLAY_MODE:AMAZON.ResumeIntent');
+      logger.info('PLAY_MODE:AMAZON.ResumeIntent');
       audio_controller.play.call(this);
     },
     'AMAZON.StopIntent': function() {
-      console.log('PLAY_MODE:AMAZON.StopIntent');
+      logger.info('PLAY_MODE:AMAZON.StopIntent');
       audio_controller.stop.call(this);
       this.response.speak(constants.strings.ALEXA_STOP_RESP);
       this.emit(':responseReady');
     },
     'AMAZON.CancelIntent': function() {
-      console.log('PLAY_MODE:AMAZON.CancelIntent');
+      logger.info('PLAY_MODE:AMAZON.CancelIntent');
       audio_controller.stop.call(this);
     },
     'AMAZON.HelpIntent': function() {
-      console.log('PLAY_MODE:AMAZON.HelpIntent');
+      logger.info('PLAY_MODE:AMAZON.HelpIntent');
 
       this.response
         .speak(constants.strings.START_HELP)
@@ -140,7 +175,7 @@ var state_handlers = {
     },
     SessionEndedRequest: function() {
       // No session ended logic
-      console.log('PLAY_MODE:SessionEndedRequest');
+      logger.info('PLAY_MODE:SessionEndedRequest');
       audio_controller.stop.call(this);
 
       this.handler.state = '';
@@ -148,7 +183,7 @@ var state_handlers = {
       this.emit(':saveState', true);
     },
     Unhandled: function() {
-      console.log('PLAY_MODE:Unhandled: ' + this.event.request.intent.name);
+      logger.info('PLAY_MODE:Unhandled');
 
       this.response
         .speak(constants.strings.PLAY_MODE_UNHANDLED)
@@ -167,7 +202,7 @@ var state_handlers = {
     {
       //Intent handlers for TITLES_DECISION_MODE
       LaunchRequest: function() {
-        console.log('TITLES_DECISION_MODE:LaunchRequest');
+        logger.info('TITLES_DECISION_MODE:LaunchRequest');
         this.handler.state = constants.states.START_MODE;
 
         this.response
@@ -176,39 +211,39 @@ var state_handlers = {
         this.emit(':responseReady');
       },
       'AMAZON.YesIntent': function() {
-        console.log('TITLES_DECISION_MODE:AMAZON.YesIntent');
+        logger.info('TITLES_DECISION_MODE:AMAZON.YesIntent');
         synthesisHelper(this);
       },
       'AMAZON.NoIntent': function() {
-        console.log('TITLES_DECISION_MODE:AMAZON.NoIntent');
+        logger.info('TITLES_DECISION_MODE:AMAZON.NoIntent');
         synthesisHelper(this);
       },
       skim: function() {
-        console.log('TITLES_DECISION_MODE:skim');
+        logger.info('TITLES_DECISION_MODE:skim');
         synthesisHelperUrl(this);
       },
       fullarticle: function() {
-        console.log('TITLES_DECISION_MODE:fullarticle');
+        logger.info('TITLES_DECISION_MODE:fullarticle');
         synthesisHelperUrl(this);
       },
       SearchAndPlayArticle: function() {
-        console.log('TITLES_DECISION_MODE:SearchAndPlayArticle');
+        logger.info('TITLES_DECISION_MODE:SearchAndPlayArticle');
         matchArticleToTitlesHelper(this);
       },
       ScoutTitles: function() {
-        console.log('TITLES_DECISION_MODE:ScoutTitles');
+        logger.info('TITLES_DECISION_MODE:ScoutTitles');
         getTitlesHelper(this);
       },
       'AMAZON.PauseIntent': function() {
-        console.log('PLAY_MODE:AMAZON.PauseIntent');
+        logger.info('TITLES_DECISION_MODE:AMAZON.PauseIntent');
         audio_controller.stop.call(this);
       },
       'AMAZON.ResumeIntent': function() {
-        console.log('PLAY_MODE:AMAZON.ResumeIntent');
+        logger.info('TITLES_DECISION_MODE:AMAZON.ResumeIntent');
         audio_controller.play.call(this);
       },
       'AMAZON.StopIntent': function() {
-        console.log('TITLES_DECISION_MODE:AMAZON.StopIntent');
+        logger.info('TITLES_DECISION_MODE:AMAZON.StopIntent');
         this.handler.state = constants.states.START_MODE;
         this.response.speak(constants.strings.ALEXA_STOP_RESP);
         this.handler.state = '';
@@ -218,14 +253,14 @@ var state_handlers = {
         this.emit(':responseReady');
       },
       'AMAZON.HelpIntent': function() {
-        console.log('TITLES_DECISION_MODE:AMAZON.HelpIntent');
+        logger.info('TITLES_DECISION_MODE:AMAZON.HelpIntent');
         this.response
           .speak(constants.strings.TITLE_HELP)
           .listen(constants.strings.TITLE_HELP);
         this.emit(':responseReady');
       },
       'AMAZON.RepeatIntent': function() {
-        console.log('TITLES_DECISION_MODE:AMAZON.RepeatIntent');
+        logger.info('TITLES_DECISION_MODE:AMAZON.RepeatIntent');
 
         //Backup the title count.
         if (this.attributes['titleCount'] % constants.TITLE_CHUNK_LEN !== 0) {
@@ -251,7 +286,7 @@ var state_handlers = {
       },
       'AMAZON.NextIntent': function() {
         //Get the next chunk of titles
-        console.log('TITLES_DECISION_MODE:AMAZON.NextIntent');
+        logger.info('TITLES_DECISION_MODE:AMAZON.NextIntent');
         let respTitles = getTitleChunk(
           this.attributes['titles'].articles,
           this
@@ -275,13 +310,13 @@ var state_handlers = {
       },
       SessionEndedRequest: function() {
         // No session ended logic
-        console.log('TITLES_DECISION_MODE:SessionEndedRequest');
+        logger.info('TITLES_DECISION_MODE:SessionEndedRequest');
         this.handler.state = '';
         delete this.attributes['State'];
         this.emit(':saveState', true);
       },
       Unhandled: function() {
-        console.log('TITLES_DECISION_MODE:Unhandled');
+        logger.info('TITLES_DECISION_MODE:Unhandled');
 
         var message =
           constants.strings.ERROR_UNEXPECTED_STATE +
@@ -295,14 +330,15 @@ var state_handlers = {
 
 var scout_agent = (function() {
   const scoutOptions = {
-    uri: 'http://' + process.env.SCOUT_ADDR + '/command/intent',
+    uri: 'https://' + process.env.SCOUT_ADDR + '/command/intent',
     method: 'POST',
     body: '',
     headers: {
       'Content-Type': 'application/json; charset=UTF-8',
       'X-Accept': 'application/json',
       Content: 'application/json',
-      'x-access-token': process.env.JWOT_TOKEN
+      'x-access-token': process.env.JWOT_TOKEN,
+      'User-Agent': constants.strings.USER_AGENT
     }
   };
 
@@ -321,7 +357,7 @@ var scout_agent = (function() {
             resolve(jsonBody);
           })
           .catch(function(err) {
-            console.log('Scout unavailable');
+            logger.error('Scout unavailable');
             reject('Scout Unavailable');
           });
       });
@@ -331,7 +367,7 @@ var scout_agent = (function() {
         let search = getTitleFromSlotEvent(event);
         let reqBody = {
           cmd: event.request.intent.name,
-          searchTerms: search,
+          search_terms: search,
           userid: event.session.user.accessToken
         };
         scoutOptions.body = JSON.stringify(reqBody);
@@ -342,7 +378,7 @@ var scout_agent = (function() {
             resolve(jsonBody);
           })
           .catch(function(err) {
-            console.log('Scout unavailable');
+            logger.error('Scout unavailable');
             reject('Scout Unavailable');
           });
       });
@@ -351,9 +387,9 @@ var scout_agent = (function() {
       return new Promise((resolve, reject) => {
         let synthType =
           event.request.intent.name == 'skim' ? 'summary' : 'article';
-        console.log('synth type is: ' + synthType);
+        logger.debug('synth type is: ' + synthType);
         let scoutOptions = {
-          uri: 'http://' + process.env.SCOUT_ADDR + '/command/' + synthType,
+          uri: 'https://' + process.env.SCOUT_ADDR + '/command/' + synthType,
           body: JSON.stringify({
             userid: event.session.user.accessToken,
             url: chosenArticle,
@@ -364,7 +400,8 @@ var scout_agent = (function() {
             'Content-Type': 'application/json; charset=UTF-8',
             'X-Accept': 'application/json',
             Content: 'application/json',
-            'x-access-token': process.env.JWOT_TOKEN
+            'x-access-token': process.env.JWOT_TOKEN,
+            'User-Agent': constants.strings.USER_AGENT
           }
         };
 
@@ -374,8 +411,39 @@ var scout_agent = (function() {
             resolve(jsonBody);
           })
           .catch(function(err) {
-            console.log('Scout unavailable');
+            logger.error('Scout unavailable');
             reject('Scout Unavailable');
+          });
+      });
+    },
+    updateArticleStatus: function(userId, articleId, offset) {
+      return new Promise((resolve, reject) => {
+        console.log(
+          `updateArticleStatus: ${articleId} for ${userId}. Offset: ${offset}`
+        );
+        let scoutOptions = {
+          uri: `https://${process.env.SCOUT_ADDR}/article-status/`,
+          method: 'POST',
+          body: JSON.stringify({
+            pocket_user_id: userId,
+            article_id: articleId,
+            offset_ms: offset
+          }),
+          headers: {
+            'Content-Type': 'application/json; charset=UTF-8',
+            'X-Accept': 'application/json',
+            Content: 'application/json',
+            'x-access-token': process.env.JWOT_TOKEN
+          }
+        };
+
+        rp(scoutOptions)
+          .then(function(body) {
+            resolve();
+          })
+          .catch(function(err) {
+            console.log(`updateArticle API unavailable: ${err}`);
+            reject(`updateArticle API unavailable: ${err}`);
           });
       });
     }
@@ -392,6 +460,7 @@ function matchArticleToTitlesHelper(stateObj) {
     ).then(
       function(article) {
         thisVar.attributes['chosenArticle'] = article.resolved_url;
+        thisVar.attributes['articleId'] = article.item_id;
         thisVar.response
           .speak(constants.strings.TITLE_CHOOSE_SUMM_FULL)
           .listen(constants.strings.TITLE_CHOICE_REPROMPT);
@@ -409,7 +478,7 @@ function matchArticleToTitlesHelper(stateObj) {
 }
 
 async function searchAndPlayArticleHelper(stateObj) {
-  if (stateObj.event.session.new) {
+  if (stateObj.event.session.new || !stateObj.attributes['titles']) {
     const titles = await scout_agent.handleTitles(stateObj.event);
     stateObj.attributes['titles'] = titles;
   }
@@ -419,11 +488,11 @@ async function searchAndPlayArticleHelper(stateObj) {
 
 //Handler to get the titles for Alexa to read
 function getTitlesHelper(stateObj) {
-  console.log('ScoutTitles');
+  logger.debug('ScoutTitles');
   stateObj.attributes['chosenArticle'] = 'none';
   scout_agent.handle(stateObj.event).then(
     titles => {
-      console.log('promise resolved');
+      logger.debug('promise resolved');
       stateObj.handler.state = constants.states.TITLES_DECISION_MODE;
       stateObj.attributes['titleCount'] = 0;
       stateObj.attributes['titles'] = titles;
@@ -438,7 +507,7 @@ function getTitlesHelper(stateObj) {
       stateObj.emit(':responseReady');
     },
     error => {
-      stateObj.response.speak('Error Getting titles');
+      stateObj.response.speak(constants.strings.ERROR_GETTING_TITLES);
       stateObj.emit(':responseReady');
     }
   );
@@ -457,11 +526,11 @@ function getTitleChunk(articleJson, stateObj) {
     let retSpeech = '<break />';
     arrChunk.forEach(function(element, index) {
       const cleanTitle = cleanStringForSsml(element.title);
-      console.log(`article title: ${cleanTitle}`);
+      logger.debug(`article title: ${cleanTitle}`);
 
       retSpeech = `${retSpeech} ${index + 1}. ${cleanTitle}. ${
-        element.lengthMinutes
-      } minutes.  `;
+        element.length_minutes
+      } minute${element.length_minutes === 1 ? '' : 's'}.  `;
     });
     stateObj.attributes['titleCount'] += arrChunk.length;
 
@@ -473,16 +542,16 @@ function getTitleChunk(articleJson, stateObj) {
 //synthesized as speech and return as a url
 // to play with audioPlayer.
 function synthesisHelper(stateObj) {
-  console.log('synthesisHelper');
+  logger.debug('synthesisHelper');
   const directiveServiceCall = callDirectiveService(stateObj.event).catch(
     error => {
-      console.log('Unable to play a progressive response' + error);
+      logger.error('Unable to play a progressive response' + error);
     }
   );
 
   const getArticle = scout_agent.handle(stateObj.event).then(
     url => {
-      console.log('promise resolved: ' + url.url);
+      logger.debug('promise resolved: ' + url.url);
       stateObj.attributes['url'] = url.url;
       stateObj.attributes['offsetInMilliseconds'] = 0;
       audio_controller.play.call(stateObj);
@@ -497,7 +566,7 @@ function synthesisHelper(stateObj) {
   );
 
   Promise.all([directiveServiceCall, getArticle]).then(function(values) {
-    console.log(values);
+    logger.debug(values);
   });
 }
 
@@ -505,11 +574,11 @@ function synthesisHelper(stateObj) {
 //synthesized as speech and return as a url
 // to play with audioPlayer.
 function synthesisHelperUrl(stateObj) {
-  console.log('synthesisHelperUrl');
+  logger.debug('synthesisHelperUrl');
 
   // Check to make sure that there is a chosen article first
   if (stateObj.attributes['chosenArticle'] === 'none') {
-    console.log('No chosenArticle.  User probably did not use an intent.');
+    logger.error('No chosenArticle.  User probably did not use an intent.');
     stateObj.response
       .speak(constants.strings.TITLE_SEARCH_MATCH_FAIL)
       .listen(constants.strings.TITLE_SEARCH_MATCH_FAIL);
@@ -518,29 +587,30 @@ function synthesisHelperUrl(stateObj) {
   } else {
     const directiveServiceCall = callDirectiveService(stateObj.event).catch(
       error => {
-        console.log('Unable to play a progressive response' + error);
+        logger.error('Unable to play a progressive response' + error);
       }
     );
-    console.log('Chosen Article is: ' + stateObj.attributes['chosenArticle']);
-    const getArticle = scout_agent
+    logger.info('Chosen Article is: ' + stateObj.attributes['chosenArticle']);
+    stateObj.attributes['full'] =
+      stateObj.event.request.intent.name == 'fullarticle';
+    stateObj.attributes['userId'] = stateObj.event.session.user.accessToken;
+    const article = scout_agent
       .handleUrl(stateObj.attributes['chosenArticle'], stateObj.event)
-      .then(
-        url => {
-          console.log('promise resolved: ' + url.url);
-          stateObj.attributes['url'] = url.url;
-          stateObj.attributes['instructions_url'] = url.instructions_url;
-          stateObj.attributes['offsetInMilliseconds'] = 0;
-          audio_controller.play.call(stateObj);
-        },
-        error => {
-          console.log('handleURL promise failed');
-          stateObj.response.speak(constants.strings.ARTICLE_FAIL_MSG);
-          stateObj.emit(':responseReady');
-        }
-      );
+      .then(function(article) {
+        logger.debug('promise resolved: ' + article.url);
+        stateObj.attributes['url'] = article.url;
+        stateObj.attributes['instructions_url'] = url.instructions_url;
+        stateObj.attributes['offsetInMilliseconds'] = article.offset_ms;
+        audio_controller.play.call(stateObj);
+      })
+      .catch(function(err) {
+        logger.error(`handleURL promise failed: ${err}`);
+        stateObj.response.speak(constants.strings.ARTICLE_FAIL_MSG);
+        stateObj.emit(':responseReady');
+      });
 
-    Promise.all([directiveServiceCall, getArticle]).then(function(values) {
-      console.log(values);
+    Promise.all([directiveServiceCall, article]).then(function(values) {
+      logger.debug(values);
     });
   }
 }
@@ -561,7 +631,7 @@ function getTitleFromSlotEvent(event) {
   let search = 0;
   for (var p in slots) {
     if (slots.hasOwnProperty(p)) {
-      console.log(p + ': ' + slots[p].value);
+      logger.debug(p + ': ' + slots[p].value);
       if (p == 'CatchAllSlot') {
         search = slots[p].value;
       }
@@ -579,7 +649,7 @@ function findBestScoringTitle(searchPhrase, articleArr) {
     let tfidf = new TfIdf();
     //tokenize and Stem each title and then add to our dataset
     for (var i = 0; i < articleArr.length; i++) {
-      console.log(articleArr[i].title);
+      logger.debug(articleArr[i].title);
       let stemmed = articleArr[i].title.tokenizeAndStem();
       tfidf.addDocument(stemmed);
     }
@@ -588,20 +658,20 @@ function findBestScoringTitle(searchPhrase, articleArr) {
     let curMaxIndex = 0;
     let iCount = 0;
     tfidf.tfidfs(wordsStem, function(i, measure) {
-      console.log('document #' + i + ' is ' + measure);
+      logger.debug('document #' + i + ' is ' + measure);
       if (measure > maxValue) {
         maxValue = measure;
         curMaxIndex = i;
       }
       iCount++;
       if (iCount >= articleArr.length) {
-        console.log('Max Score is: ' + maxValue);
+        logger.debug('Max Score is: ' + maxValue);
         // Check to make sure something matched above score of 0.
         if (maxValue === 0) {
-          console.log('Error, no search match with utterance');
+          logger.error('Error, no search match with utterance');
           reject(constants.strings.TITLE_SEARCH_MATCH_FAIL);
         } else {
-          console.log('Article is: ' + articleArr[curMaxIndex].title);
+          logger.debug('Article is: ' + articleArr[curMaxIndex].title);
           resolve(articleArr[curMaxIndex]);
         }
       }

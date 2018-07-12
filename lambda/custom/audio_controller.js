@@ -1,5 +1,6 @@
 'use strict';
 var constants = require('./constants');
+const logger = require('./logger');
 
 var audio_controller = (function() {
   return {
@@ -17,7 +18,7 @@ var audio_controller = (function() {
       // Since play behavior is REPLACE_ALL, enqueuedToken attribute need to be set to null.
       this.attributes['enqueuedToken'] = null;
       var offsetInMilliseconds = this.attributes['offsetInMilliseconds'];
-      console.log('URL is: ' + this.attributes['url']);
+      logger.debug('URL is: ' + this.attributes['url']);
       this.response.audioPlayerPlay(
         playBehavior,
         this.attributes['url'],
@@ -29,7 +30,7 @@ var audio_controller = (function() {
       this.emit(':responseReady');
     },
     stop: function() {
-      console.log('received a stop request');
+      logger.debug('received a stop request');
       this.response.audioPlayerStop();
       this.emit(':responseReady');
     }

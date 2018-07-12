@@ -1,1 +1,5 @@
 lambda/custom/node_modules/
+lambda/custom/.nyc_output/
+lambda/custom/coverage/
+.DS_Store
+*.log

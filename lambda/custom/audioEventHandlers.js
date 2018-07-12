@@ -1,7 +1,8 @@
 'use strict';
 
-var Alexa = require('alexa-sdk');
+var Alexa = require('ask-sdk-v1adapter');
 var constants = require('./constants');
+const logger = require('./logger');
 
 // Binding audio handlers to PLAY_MODE State since they are expected only in this mode.
 var audioEventHandlers = Alexa.CreateStateHandler(constants.states.PLAY_MODE, {
@@ -11,7 +12,7 @@ var audioEventHandlers = Alexa.CreateStateHandler(constants.states.PLAY_MODE, {
          * Confirming that requested audio file began playing.
          * Storing details in dynamoDB using attributes.
          */
-    console.log('State is: ' + this.handler.state);
+    logger.debug('State is: ' + this.handler.state);
 
     this.handler.state = constants.states.PLAY_MODE;
     this.emit(':saveState', true);
@@ -30,7 +31,8 @@ var audioEventHandlers = Alexa.CreateStateHandler(constants.states.PLAY_MODE, {
     this.attributes['offsetInMilliseconds'] = getOffsetInMilliseconds.call(
       this
     );
-    this.emit(':saveState', true);
+    this.handler.state = constants.states.PLAY_MODE;
+    this.emitWithState('StoppedArticle');
   },
 
   PlaybackNearlyFinished: function() {
@@ -44,14 +46,14 @@ var audioEventHandlers = Alexa.CreateStateHandler(constants.states.PLAY_MODE, {
     this.emit(':saveState', true);
   },
   PlaybackFailed: function() {
-    console.log('Playback Failed : %j', this.event.request.error);
+    logger.error('Playback Failed: ' + this.event.request.error);
     this.context.succeed({});
   }
 });
 
 function getOffsetInMilliseconds() {
   // Extracting offsetInMilliseconds received in the request.
-  console.log('millisecs are: ' + this.event.request.offsetInMilliseconds);
+  logger.debug('millisecs are: ' + this.event.request.offsetInMilliseconds);
   return this.event.request.offsetInMilliseconds;
 }
 

@@ -53,10 +53,12 @@ module.exports = Object.freeze({
     ERROR_UNHANDLED_STATE:
       'Sorry, I could not understand. Please say, get titles to hear your titles.',
     ERROR_UNEXPECTED_STATE: 'Sorry, unhandled intent: in state: ',
+    ERROR_GETTING_TITLES: 'Error Getting titles',
     PLAY_MODE_UNHANDLED:
       'Sorry, I could not understand that.  ' +
       'You can say pause or resume or stop to control the audio',
-    WAIT_ARTICLE: 'One moment while I get that ready for you...'
+    WAIT_ARTICLE: 'One moment while I get that ready for you...',
+    USER_AGENT: 'Alexa Skill'
   },
   TITLE_CHUNK_LEN: 5,
 
