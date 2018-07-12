@@ -599,7 +599,7 @@ function synthesisHelperUrl(stateObj) {
       .then(function(article) {
         logger.debug('promise resolved: ' + article.url);
         stateObj.attributes['url'] = article.url;
-        stateObj.attributes['instructions_url'] = url.instructions_url;
+        stateObj.attributes['instructions_url'] = article.instructions_url;
         stateObj.attributes['offsetInMilliseconds'] = article.offset_ms;
         audio_controller.play.call(stateObj);
       })
