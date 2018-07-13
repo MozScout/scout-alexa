@@ -36,6 +36,13 @@ var audioEventHandlers = Alexa.CreateStateHandler(constants.states.PLAY_MODE, {
   },
 
   PlaybackNearlyFinished: function() {
+    this.response.audioPlayerPlay(
+      'ENQUEUE',
+      this.attributes['instructions_url'],
+      String(this.attributes['instructions_url']),
+      this.attributes['enqueue_token'],
+      0
+    );
     this.emit(':saveState', true);
   },
   PlaybackFailed: function() {
