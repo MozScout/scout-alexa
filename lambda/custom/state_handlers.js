@@ -35,6 +35,26 @@ var state_handlers = {
         logger.info('START_MODE:SearchAndSummarizeArticle');
         synthesisHelper(this);
       },
+      PlayFirst: function() {
+        logger.info('START_MODE:PlayFirst');
+        ordinalHelper(this, 0);
+      },
+      PlaySecond: function() {
+        logger.info('START_MODE:PlaySecond');
+        ordinalHelper(this, 1);
+      },
+      PlayThird: function() {
+        logger.info('START_MODE:PlayThird');
+        ordinalHelper(this, 2);
+      },
+      PlayFourth: function() {
+        logger.info('START_MODE:PlayFourth');
+        ordinalHelper(this, 3);
+      },
+      PlayFifth: function() {
+        logger.info('START_MODE:PlayFifth');
+        ordinalHelper(this, 4);
+      },
       ScoutMyPocket: function() {
         logger.info('START_MODE:ScoutMyPocket');
         synthesisHelper(this);
@@ -122,6 +142,26 @@ var state_handlers = {
     SearchAndSummarizeArticle: function() {
       logger.info('PLAY_MODE:SearchAndSummarizeArticle');
       synthesisHelper(this);
+    },
+    PlayFirst: function() {
+      logger.info('PLAY_MODE:PlayFirst');
+      ordinalHelper(this, 0);
+    },
+    PlaySecond: function() {
+      logger.info('PLAY_MODE:PlaySecond');
+      ordinalHelper(this, 1);
+    },
+    PlayThird: function() {
+      logger.info('PLAY_MODE:PlayThird');
+      ordinalHelper(this, 2);
+    },
+    PlayFourth: function() {
+      logger.info('PLAY_MODE:PlayFourth');
+      ordinalHelper(this, 3);
+    },
+    PlayFifth: function() {
+      logger.info('PLAY_MODE:PlayFifth');
+      ordinalHelper(this, 4);
     },
     ScoutMyPocket: function() {
       logger.info('PLAY_MODE:ScoutMyPocket');
@@ -229,6 +269,26 @@ var state_handlers = {
       SearchAndPlayArticle: function() {
         logger.info('TITLES_DECISION_MODE:SearchAndPlayArticle');
         matchArticleToTitlesHelper(this);
+      },
+      PlayFirst: function() {
+        logger.info('TITLES_DECISION_MODE:PlayFirst');
+        playOrdinal(this, 0);
+      },
+      PlaySecond: function() {
+        logger.info('TITLES_DECISION_MODE:PlaySecond');
+        playOrdinal(this, 1);
+      },
+      PlayThird: function() {
+        logger.info('TITLES_DECISION_MODE:PlayThird');
+        playOrdinal(this, 2);
+      },
+      PlayFourth: function() {
+        logger.info('TITLES_DECISION_MODE:PlayFourth');
+        playOrdinal(this, 3);
+      },
+      PlayFifth: function() {
+        logger.info('TITLES_DECISION_MODE:PlayFifth');
+        playOrdinal(this, 4);
       },
       ScoutTitles: function() {
         logger.info('TITLES_DECISION_MODE:ScoutTitles');
@@ -474,6 +534,34 @@ function matchArticleToTitlesHelper(stateObj) {
         thisVar.emit(':responseReady');
       }
     );
+  }
+}
+
+async function ordinalHelper(stateObj, position) {
+  if (stateObj.event.session.new || !stateObj.attributes['titles']) {
+    const titles = await scout_agent.handleTitles(stateObj.event);
+    stateObj.attributes['titles'] = titles;
+  }
+  stateObj.handler.state = constants.states.TITLES_DECISION_MODE;
+  playOrdinal(stateObj, position);
+}
+
+// position is indexed from 0: first=0, second=1...
+function playOrdinal(stateObj, position) {
+  let article = stateObj.attributes['titles'].articles[position];
+  if (article) {
+    stateObj.attributes['chosenArticle'] = article.resolved_url;
+    stateObj.attributes['articleId'] = article.item_id;
+    stateObj.response
+      .speak(constants.strings.TITLE_CHOOSE_SUMM_FULL)
+      .listen(constants.strings.TITLE_CHOICE_REPROMPT);
+    stateObj.emit(':responseReady');
+  } else {
+    stateObj.response
+      .speak(constants.strings.ORDINAL_FAIL)
+      .listen(constants.strings.ORDINAL_FAIL);
+    stateObj.attributes['chosenArticle'] = 'none';
+    stateObj.emit(':responseReady');
   }
 }
 
