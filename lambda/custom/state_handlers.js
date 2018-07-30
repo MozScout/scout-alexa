@@ -90,7 +90,7 @@ var state_handlers = {
         audio_controller.play.call(this);
       },
       'AMAZON.RepeatIntent': function() {
-        console.log('START_MODE:AMAZON.RepeatIntent');
+        logger.info('START_MODE:AMAZON.RepeatIntent');
         this.response
           .speak(constants.strings.WELCOME_MSG)
           .listen(constants.strings.WELCOME_REPROMPT);
@@ -177,7 +177,7 @@ var state_handlers = {
       this.emit('StoppedArticle');
     },
     StoppedArticle: function() {
-      console.log('PLAY_MODE:StoppedArticle');
+      logger.info('PLAY_MODE:StoppedArticle');
       if (this.attributes['full']) {
         scout_agent
           .updateArticleStatus(
@@ -186,7 +186,7 @@ var state_handlers = {
             this.attributes['offsetInMilliseconds']
           )
           .catch(function(err) {
-            console.log(`Error during offset update: ${err}`);
+            logger.error(`Error during offset update: ${err}`);
           });
       }
       this.emit(':saveState', true);
@@ -548,6 +548,9 @@ async function ordinalHelper(stateObj, position) {
 
 // position is indexed from 0: first=0, second=1...
 function playOrdinal(stateObj, position) {
+  // update position if the user said next before
+  position = stateObj.attributes['currentTitleCount'] + position;
+
   let article = stateObj.attributes['titles'].articles[position];
   if (article) {
     stateObj.attributes['chosenArticle'] = article.resolved_url;
@@ -620,6 +623,8 @@ function getTitleChunk(articleJson, stateObj) {
         element.length_minutes
       } minute${element.length_minutes === 1 ? '' : 's'}.  `;
     });
+    stateObj.attributes['currentTitleCount'] =
+      stateObj.attributes['titleCount'];
     stateObj.attributes['titleCount'] += arrChunk.length;
 
     return retSpeech;
