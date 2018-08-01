@@ -537,6 +537,7 @@ function matchArticleToTitlesHelper(stateObj) {
   }
 }
 
+// helper fetches titles before playing ordinal
 async function ordinalHelper(stateObj, position) {
   if (stateObj.event.session.new || !stateObj.attributes['titles']) {
     const titles = await scout_agent.handleTitles(stateObj.event);
@@ -546,6 +547,7 @@ async function ordinalHelper(stateObj, position) {
   playOrdinal(stateObj, position);
 }
 
+// play the article depending on the ordinal
 // position is indexed from 0: first=0, second=1...
 function playOrdinal(stateObj, position) {
   // update position if the user said next before
@@ -623,6 +625,8 @@ function getTitleChunk(articleJson, stateObj) {
         element.length_minutes
       } minute${element.length_minutes === 1 ? '' : 's'}.  `;
     });
+
+    // store currentTitleCount for Ordinal
     stateObj.attributes['currentTitleCount'] =
       stateObj.attributes['titleCount'];
     stateObj.attributes['titleCount'] += arrChunk.length;
