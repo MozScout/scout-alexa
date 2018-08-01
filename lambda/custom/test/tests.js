@@ -178,7 +178,7 @@ describe('Integration Tests', function() {
       result = await alexa.utter('Titles');
       assert.include(result.prompt(), constants.strings.TITLE_ANN);
 
-      result = await alexa.utter('Play Blockchain');
+      result = await alexa.utter('Play Intel resignation');
       assert.include(result.prompt(), constants.strings.TITLE_CHOOSE_SUMM_FULL);
 
       result = await alexa.utter('entire story');
@@ -386,6 +386,284 @@ describe('Integration Tests', function() {
       assert.isNotTrue(alexa.audioPlayer().isPlaying());
 
       result = await alexa.utter('resume');
+      assert.isTrue(alexa.audioPlayer().isPlaying());
+
+      result = await alexa.utter('stop');
+      assert.isNotTrue(alexa.audioPlayer().isPlaying());
+    });
+  });
+  describe('Ordinals', function() {
+    it('Play First after Get Titles - Test 1', async () => {
+      let result = await alexa.launch();
+      assert.include(result.prompt(), constants.strings.WELCOME_MSG);
+      assert.include(result.reprompt(), constants.strings.WELCOME_REPROMPT);
+
+      result = await alexa.utter('get my titles');
+      assert.include(result.prompt(), constants.strings.TITLE_ANN);
+
+      result = await alexa.utter('Play the first one');
+      assert.include(result.prompt(), constants.strings.TITLE_CHOOSE_SUMM_FULL);
+
+      result = await alexa.utter('full article');
+      assert.include(
+        result.response.directives[0].audioItem.stream.url,
+        checkStreamingString
+      );
+      assert.isTrue(alexa.audioPlayer().isPlaying());
+
+      result = await alexa.utter('stop');
+      assert.isNotTrue(alexa.audioPlayer().isPlaying());
+    });
+
+    it('Play First after Get Titles - Test 2', async () => {
+      let result = await alexa.launch();
+      assert.include(result.prompt(), constants.strings.WELCOME_MSG);
+      assert.include(result.reprompt(), constants.strings.WELCOME_REPROMPT);
+
+      result = await alexa.utter('get my titles');
+      assert.include(result.prompt(), constants.strings.TITLE_ANN);
+
+      result = await alexa.utter('Play number one');
+      assert.include(result.prompt(), constants.strings.TITLE_CHOOSE_SUMM_FULL);
+
+      result = await alexa.utter('full article');
+      assert.include(
+        result.response.directives[0].audioItem.stream.url,
+        checkStreamingString
+      );
+      assert.isTrue(alexa.audioPlayer().isPlaying());
+
+      result = await alexa.utter('stop');
+      assert.isNotTrue(alexa.audioPlayer().isPlaying());
+    });
+
+    it('Play First after Get Titles - Test 3', async () => {
+      let result = await alexa.launch();
+      assert.include(result.prompt(), constants.strings.WELCOME_MSG);
+      assert.include(result.reprompt(), constants.strings.WELCOME_REPROMPT);
+
+      result = await alexa.utter('get my titles');
+      assert.include(result.prompt(), constants.strings.TITLE_ANN);
+
+      result = await alexa.utter('number one');
+      assert.include(result.prompt(), constants.strings.TITLE_CHOOSE_SUMM_FULL);
+
+      result = await alexa.utter('full article');
+      assert.include(
+        result.response.directives[0].audioItem.stream.url,
+        checkStreamingString
+      );
+      assert.isTrue(alexa.audioPlayer().isPlaying());
+
+      result = await alexa.utter('stop');
+      assert.isNotTrue(alexa.audioPlayer().isPlaying());
+    });
+
+    it('Play Second after Get Titles', async () => {
+      let result = await alexa.launch();
+      assert.include(result.prompt(), constants.strings.WELCOME_MSG);
+      assert.include(result.reprompt(), constants.strings.WELCOME_REPROMPT);
+
+      result = await alexa.utter('get my titles');
+      assert.include(result.prompt(), constants.strings.TITLE_ANN);
+
+      result = await alexa.utter('play second');
+      assert.include(result.prompt(), constants.strings.TITLE_CHOOSE_SUMM_FULL);
+
+      result = await alexa.utter('full article');
+      assert.include(
+        result.response.directives[0].audioItem.stream.url,
+        checkStreamingString
+      );
+      assert.isTrue(alexa.audioPlayer().isPlaying());
+
+      result = await alexa.utter('stop');
+      assert.isNotTrue(alexa.audioPlayer().isPlaying());
+    });
+
+    it('Play Third after Get Titles', async () => {
+      let result = await alexa.launch();
+      assert.include(result.prompt(), constants.strings.WELCOME_MSG);
+      assert.include(result.reprompt(), constants.strings.WELCOME_REPROMPT);
+
+      result = await alexa.utter('get my titles');
+      assert.include(result.prompt(), constants.strings.TITLE_ANN);
+
+      result = await alexa.utter('play third');
+      assert.include(result.prompt(), constants.strings.TITLE_CHOOSE_SUMM_FULL);
+
+      result = await alexa.utter('full article');
+      assert.include(
+        result.response.directives[0].audioItem.stream.url,
+        checkStreamingString
+      );
+      assert.isTrue(alexa.audioPlayer().isPlaying());
+
+      result = await alexa.utter('stop');
+      assert.isNotTrue(alexa.audioPlayer().isPlaying());
+    });
+
+    it('Play Fourth after Get Titles', async () => {
+      let result = await alexa.launch();
+      assert.include(result.prompt(), constants.strings.WELCOME_MSG);
+      assert.include(result.reprompt(), constants.strings.WELCOME_REPROMPT);
+
+      result = await alexa.utter('get my titles');
+      assert.include(result.prompt(), constants.strings.TITLE_ANN);
+
+      result = await alexa.utter('play fourth');
+      assert.include(result.prompt(), constants.strings.TITLE_CHOOSE_SUMM_FULL);
+
+      result = await alexa.utter('full article');
+      assert.include(
+        result.response.directives[0].audioItem.stream.url,
+        checkStreamingString
+      );
+      assert.isTrue(alexa.audioPlayer().isPlaying());
+
+      result = await alexa.utter('stop');
+      assert.isNotTrue(alexa.audioPlayer().isPlaying());
+    });
+
+    it('Play Fifth after Get Titles', async () => {
+      let result = await alexa.launch();
+      assert.include(result.prompt(), constants.strings.WELCOME_MSG);
+      assert.include(result.reprompt(), constants.strings.WELCOME_REPROMPT);
+
+      result = await alexa.utter('get my titles');
+      assert.include(result.prompt(), constants.strings.TITLE_ANN);
+
+      result = await alexa.utter('play fifth');
+      assert.include(result.prompt(), constants.strings.TITLE_CHOOSE_SUMM_FULL);
+
+      result = await alexa.utter('full article');
+      assert.include(
+        result.response.directives[0].audioItem.stream.url,
+        checkStreamingString
+      );
+      assert.isTrue(alexa.audioPlayer().isPlaying());
+
+      result = await alexa.utter('stop');
+      assert.isNotTrue(alexa.audioPlayer().isPlaying());
+    });
+
+    it('Play First on Start Mode', async () => {
+      let result = await alexa.launch();
+      assert.include(result.prompt(), constants.strings.WELCOME_MSG);
+      assert.include(result.reprompt(), constants.strings.WELCOME_REPROMPT);
+
+      result = await alexa.utter('play first');
+      assert.include(result.prompt(), constants.strings.TITLE_CHOOSE_SUMM_FULL);
+
+      result = await alexa.utter('full article');
+      assert.include(
+        result.response.directives[0].audioItem.stream.url,
+        checkStreamingString
+      );
+      assert.isTrue(alexa.audioPlayer().isPlaying());
+
+      result = await alexa.utter('stop');
+      assert.isNotTrue(alexa.audioPlayer().isPlaying());
+    });
+
+    it('Play Number 3 on Start Mode', async () => {
+      let result = await alexa.launch();
+      assert.include(result.prompt(), constants.strings.WELCOME_MSG);
+      assert.include(result.reprompt(), constants.strings.WELCOME_REPROMPT);
+
+      result = await alexa.utter('play number three');
+      assert.include(result.prompt(), constants.strings.TITLE_CHOOSE_SUMM_FULL);
+
+      result = await alexa.utter('full article');
+      assert.include(
+        result.response.directives[0].audioItem.stream.url,
+        checkStreamingString
+      );
+      assert.isTrue(alexa.audioPlayer().isPlaying());
+
+      result = await alexa.utter('stop');
+      assert.isNotTrue(alexa.audioPlayer().isPlaying());
+    });
+
+    it('Play Number 2 after Get Titles / Next', async () => {
+      let result = await alexa.launch();
+      assert.include(result.prompt(), constants.strings.WELCOME_MSG);
+      assert.include(result.reprompt(), constants.strings.WELCOME_REPROMPT);
+
+      result = await alexa.utter('get my titles');
+      assert.include(result.prompt(), constants.strings.TITLE_ANN);
+
+      result = await alexa.utter('next');
+      assert.include(result.prompt(), constants.strings.TITLE_PREFIX);
+      assert.include(result.prompt(), constants.strings.TITLE_CHOICE_EXPLAIN);
+      assert.include(
+        result.reprompt(),
+        constants.strings.TITLE_CHOICE_EXPLAIN_REPROMPT
+      );
+
+      result = await alexa.utter('play number two');
+      assert.include(result.prompt(), constants.strings.TITLE_CHOOSE_SUMM_FULL);
+
+      result = await alexa.utter('full article');
+      assert.include(
+        result.response.directives[0].audioItem.stream.url,
+        checkStreamingString
+      );
+      assert.isTrue(alexa.audioPlayer().isPlaying());
+
+      result = await alexa.utter('stop');
+      assert.isNotTrue(alexa.audioPlayer().isPlaying());
+    });
+
+    it('Play fourth after Get Titles / Next - Not Enough', async () => {
+      let result = await alexa.launch();
+      assert.include(result.prompt(), constants.strings.WELCOME_MSG);
+      assert.include(result.reprompt(), constants.strings.WELCOME_REPROMPT);
+
+      result = await alexa.utter('get my titles');
+      assert.include(result.prompt(), constants.strings.TITLE_ANN);
+
+      result = await alexa.utter('next');
+      assert.include(result.prompt(), constants.strings.TITLE_PREFIX);
+      assert.include(result.prompt(), constants.strings.TITLE_CHOICE_EXPLAIN);
+      assert.include(
+        result.reprompt(),
+        constants.strings.TITLE_CHOICE_EXPLAIN_REPROMPT
+      );
+
+      result = await alexa.utter('play the fourth one');
+      assert.include(result.prompt(), constants.strings.ORDINAL_FAIL);
+    });
+
+    it('Play Second on Play Mode Titles', async () => {
+      let result = await alexa.launch();
+      assert.include(result.prompt(), constants.strings.WELCOME_MSG);
+      assert.include(result.reprompt(), constants.strings.WELCOME_REPROMPT);
+
+      result = await alexa.utter('get my titles');
+      assert.include(result.prompt(), constants.strings.TITLE_ANN);
+
+      result = await alexa.utter('play first');
+      assert.include(result.prompt(), constants.strings.TITLE_CHOOSE_SUMM_FULL);
+
+      result = await alexa.utter('full article');
+      assert.include(
+        result.response.directives[0].audioItem.stream.url,
+        checkStreamingString
+      );
+      assert.isTrue(alexa.audioPlayer().isPlaying());
+
+      result = await alexa.utter('pause');
+      assert.isNotTrue(alexa.audioPlayer().isPlaying());
+
+      result = await alexa.utter('play second');
+      assert.include(result.prompt(), constants.strings.TITLE_CHOOSE_SUMM_FULL);
+
+      result = await alexa.utter('full article');
+      assert.include(
+        result.response.directives[0].audioItem.stream.url,
+        checkStreamingString
+      );
       assert.isTrue(alexa.audioPlayer().isPlaying());
 
       result = await alexa.utter('stop');

@@ -48,6 +48,76 @@
           ]
         },
         {
+          "name": "PlayFirst",
+          "slots": [],
+          "samples": [
+            "play first",
+            "play number one",
+            "one",
+            "number one",
+            "first",
+            "the first one",
+            "play the first",
+            "play the first one"
+          ]
+        },
+        {
+          "name": "PlaySecond",
+          "slots": [],
+          "samples": [
+            "play second",
+            "play number two",
+            "two",
+            "number two",
+            "second",
+            "the second one",
+            "play the second",
+            "play the second one"
+          ]
+        },
+        {
+          "name": "PlayThird",
+          "slots": [],
+          "samples": [
+            "play third",
+            "play number three",
+            "three",
+            "number three",
+            "third",
+            "the third one",
+            "play the third",
+            "play the third one"
+          ]
+        },
+        {
+          "name": "PlayFourth",
+          "slots": [],
+          "samples": [
+            "play fourth",
+            "play number four",
+            "four",
+            "number four",
+            "fourth",
+            "the fourth one",
+            "play the fourth",
+            "play the fourth one"
+          ]
+        },
+        {
+          "name": "PlayFifth",
+          "slots": [],
+          "samples": [
+            "play fifth",
+            "play number five",
+            "five",
+            "number five",
+            "fifth",
+            "the fifth one",
+            "play the fifth",
+            "play the fifth one"
+          ]
+        },
+        {
           "name": "AMAZON.RepeatIntent",
           "samples": ["repeat it", "repeat those", "repeat that", "repeat"]
         },
