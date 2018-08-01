@@ -22,7 +22,7 @@ var audio_controller = (function() {
       if (hasMetaAudio) {
         if (this.attributes['offsetInMilliseconds'] == 0) {
           this.attributes['queue'].push(this.attributes['intro_url']);
-        }
+        } // don't play intro if the user has an offset on article
         this.attributes['queue'].push(this.attributes['url']);
         this.attributes['queue'].push(this.attributes['outro_url']);
         this.attributes['queue'].push(this.attributes['instructions_url']);

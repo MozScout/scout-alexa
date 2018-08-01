@@ -49,7 +49,7 @@ var audioEventHandlers = Alexa.CreateStateHandler(constants.states.PLAY_MODE, {
         this.attributes['enqueuedToken'],
         this.attributes['queue'][0] == this.attributes['url']
           ? this.attributes['offsetInMilliseconds']
-          : 0
+          : 0 // only set offset if the audiofile is the article
       );
       this.attributes['enqueuedToken'] = token;
       this.attributes['queue'].shift();
