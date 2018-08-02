@@ -102,7 +102,11 @@ var state_handlers = {
       },
       FinishedArticle: function() {
         logger.info('START_MODE:FinishedArticle');
-        if (this.attributes['full']) {
+
+        if (
+          this.attributes['full'] &&
+          this.attributes['playing'] == String(this.attributes['url'])
+        ) {
           scout_agent
             .updateArticleStatus(
               this.attributes['userId'],
@@ -178,7 +182,10 @@ var state_handlers = {
     },
     StoppedArticle: function() {
       logger.info('PLAY_MODE:StoppedArticle');
-      if (this.attributes['full']) {
+      if (
+        this.attributes['full'] &&
+        this.attributes['playing'] == String(this.attributes['url'])
+      ) {
         scout_agent
           .updateArticleStatus(
             this.attributes['userId'],
@@ -453,7 +460,7 @@ var scout_agent = (function() {
           body: JSON.stringify({
             userid: event.session.user.accessToken,
             url: chosenArticle,
-            end_instructions: 1
+            meta_audio: 1
           }),
           method: 'POST',
           headers: {
@@ -697,8 +704,10 @@ function synthesisHelperUrl(stateObj) {
         logger.debug('promise resolved: ' + article.url);
         stateObj.attributes['url'] = article.url;
         stateObj.attributes['instructions_url'] = article.instructions_url;
+        stateObj.attributes['intro_url'] = article.intro_url;
+        stateObj.attributes['outro_url'] = article.outro_url;
         stateObj.attributes['offsetInMilliseconds'] = article.offset_ms;
-        audio_controller.play.call(stateObj);
+        audio_controller.play.call(stateObj, true);
       })
       .catch(function(err) {
         logger.error(`handleURL promise failed: ${err}`);

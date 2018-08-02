@@ -745,7 +745,7 @@ describe('Integration Tests', function() {
       assert.include(result.prompt(), constants.strings.TITLE_ANN);
     });
 
-    it('PlaybackFinished', async () => {
+    it('Full article - Plays Intro/Article/Outro/EndInstructions', async () => {
       let result = await alexa.launch();
 
       result = await alexa.utter('get titles');
@@ -759,12 +759,120 @@ describe('Integration Tests', function() {
         result.response.directives[0].audioItem.stream.url,
         checkStreamingString
       );
-      assert.isTrue(alexa.audioPlayer().isPlaying());
 
-      await alexa.audioPlayer().playbackNearlyFinished();
+      // intro
+      assert.isTrue(alexa.audioPlayer().isPlaying());
       await alexa.audioPlayer().playbackFinished();
+
+      // article
+      await alexa.audioPlayer().playbackStarted();
+      assert.isTrue(alexa.audioPlayer().isPlaying());
+      await alexa.audioPlayer().playbackFinished();
+
+      // outro
+      await alexa.audioPlayer().playbackStarted();
+      assert.isTrue(alexa.audioPlayer().isPlaying());
+      await alexa.audioPlayer().playbackFinished();
+
       // end instructions
+      await alexa.audioPlayer().playbackStarted();
+      assert.isTrue(alexa.audioPlayer().isPlaying());
       await alexa.audioPlayer().playbackFinished();
+
+      assert.isNotTrue(alexa.audioPlayer().isPlaying());
+    });
+
+    it('Full article - Plays Article/Outro/EndInstructions (offset)', async () => {
+      let result = await alexa.launch();
+
+      result = await alexa.utter('get titles');
+      assert.include(result.prompt(), constants.strings.TITLE_ANN);
+
+      result = await alexa.utter('Play Firefox');
+      assert.include(result.prompt(), constants.strings.TITLE_CHOOSE_SUMM_FULL);
+
+      result = await alexa.utter('full article');
+      assert.include(
+        result.response.directives[0].audioItem.stream.url,
+        checkStreamingString
+      );
+
+      // intro
+      assert.isTrue(alexa.audioPlayer().isPlaying());
+      await alexa.audioPlayer().playbackFinished();
+
+      // article
+      await alexa.audioPlayer().playbackStarted();
+      assert.isTrue(alexa.audioPlayer().isPlaying());
+      result = await alexa.utter('stop');
+      assert.isNotTrue(alexa.audioPlayer().isPlaying());
+
+      result = await alexa.launch();
+
+      result = await alexa.utter('get titles');
+      assert.include(result.prompt(), constants.strings.TITLE_ANN);
+
+      result = await alexa.utter('Play Firefox');
+      assert.include(result.prompt(), constants.strings.TITLE_CHOOSE_SUMM_FULL);
+
+      result = await alexa.utter('full article');
+      assert.include(
+        result.response.directives[0].audioItem.stream.url,
+        checkStreamingString
+      );
+
+      // article
+      await alexa.audioPlayer().playbackStarted();
+      assert.isTrue(alexa.audioPlayer().isPlaying());
+      await alexa.audioPlayer().playbackFinished();
+
+      // outro
+      await alexa.audioPlayer().playbackStarted();
+      assert.isTrue(alexa.audioPlayer().isPlaying());
+      await alexa.audioPlayer().playbackFinished();
+
+      // end instructions
+      await alexa.audioPlayer().playbackStarted();
+      assert.isTrue(alexa.audioPlayer().isPlaying());
+      await alexa.audioPlayer().playbackFinished();
+
+      assert.isNotTrue(alexa.audioPlayer().isPlaying());
+    });
+
+    it('Summary - Plays Intro/Article/Outro/EndInstructions', async () => {
+      let result = await alexa.launch();
+
+      result = await alexa.utter('get titles');
+      assert.include(result.prompt(), constants.strings.TITLE_ANN);
+
+      result = await alexa.utter('Play Firefox');
+      assert.include(result.prompt(), constants.strings.TITLE_CHOOSE_SUMM_FULL);
+
+      result = await alexa.utter('summary');
+      assert.include(
+        result.response.directives[0].audioItem.stream.url,
+        checkStreamingString
+      );
+
+      // intro
+      assert.isTrue(alexa.audioPlayer().isPlaying());
+      await alexa.audioPlayer().playbackFinished();
+
+      // article
+      await alexa.audioPlayer().playbackStarted();
+      assert.isTrue(alexa.audioPlayer().isPlaying());
+      await alexa.audioPlayer().playbackFinished();
+
+      // outro
+      await alexa.audioPlayer().playbackStarted();
+      assert.isTrue(alexa.audioPlayer().isPlaying());
+      await alexa.audioPlayer().playbackFinished();
+
+      // end instructions
+      await alexa.audioPlayer().playbackStarted();
+      assert.isTrue(alexa.audioPlayer().isPlaying());
+      await alexa.audioPlayer().playbackFinished();
+
       assert.isNotTrue(alexa.audioPlayer().isPlaying());
     });
 

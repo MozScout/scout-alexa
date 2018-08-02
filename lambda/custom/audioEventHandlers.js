@@ -13,14 +13,17 @@ var audioEventHandlers = Alexa.CreateStateHandler(constants.states.PLAY_MODE, {
          * Storing details in dynamoDB using attributes.
          */
     logger.debug('State is: ' + this.handler.state);
+    this.attributes['playing'] = this.attributes['enqueuedToken'];
 
     this.handler.state = constants.states.PLAY_MODE;
     this.emit(':saveState', true);
   },
+
   PlaybackFinished: function() {
     this.handler.state = constants.states.START_MODE;
     this.emit('FinishedArticle');
   },
+
   PlaybackStopped: function() {
     /*
        * AudioPlayer.PlaybackStopped Directive received.
@@ -36,15 +39,24 @@ var audioEventHandlers = Alexa.CreateStateHandler(constants.states.PLAY_MODE, {
   },
 
   PlaybackNearlyFinished: function() {
-    this.response.audioPlayerPlay(
-      'ENQUEUE',
-      this.attributes['instructions_url'],
-      String(this.attributes['instructions_url']),
-      this.attributes['enqueue_token'],
-      0
-    );
+    if (this.attributes['queue'].length > 0) {
+      logger.debug('Enqueuing next audio file');
+      let token = String(this.attributes['queue'][0]);
+      this.response.audioPlayerPlay(
+        'ENQUEUE',
+        this.attributes['queue'][0],
+        token,
+        this.attributes['enqueuedToken'],
+        this.attributes['queue'][0] == this.attributes['url']
+          ? this.attributes['offsetInMilliseconds']
+          : 0 // only set offset if the audiofile is the article
+      );
+      this.attributes['enqueuedToken'] = token;
+      this.attributes['queue'].shift();
+    }
     this.emit(':saveState', true);
   },
+
   PlaybackFailed: function() {
     logger.error('Playback Failed: ' + this.event.request.error);
     this.context.succeed({});
