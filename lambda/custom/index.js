@@ -8,6 +8,7 @@ var audioEventHandlers = require('./audioEventHandlers');
 exports.handler = function(event, context, callback) {
   var alexa = Alexa.handler(event, context, callback);
   alexa.dynamoDBTableName = constants.dynamoDBTableName;
+  alexa.appId = process.env.APP_ID;
   // Each state handler is mapped to a specific state.
   alexa.registerHandlers(
     stateHandlers.startModeIntentHandlers,

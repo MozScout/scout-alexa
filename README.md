@@ -18,6 +18,7 @@ Create an AWS Lambda Function on [AWS Lambda](https://console.aws.amazon.com/lam
 
 Add the following environment variables to your Lambda function:
 
+* `APP_ID`: Alexa Skill ID. You can find it in the [Alexa Skills Kit Console](https://developer.amazon.com/alexa/console/ask)
 * `JWOT_TOKEN`: JWOT token to access API (scout-ua). Generate using the api/auth/register endpoint from scout-ua (POST request with `name`, `email`, `password` fields).
 * `SCOUT_ADDR`: API hostname for scout-ua (`yourserver.com` for instance)
 * `LOG_LEVEL`: Optional. [Winston](https://github.com/winstonjs/winston) logging level.
