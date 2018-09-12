@@ -23,8 +23,8 @@ var state_handlers = {
         this.attributes['offsetInMilliseconds'] = 0;
 
         this.response
-          .speak(constants.strings.WELCOME_MSG)
-          .listen(constants.strings.WELCOME_REPROMPT);
+          .speak(this.t('WELCOME_MSG'))
+          .listen(this.t('WELCOME_REPROMPT'));
         this.emit(':responseReady');
       },
       SearchAndPlayArticle: function() {
@@ -66,19 +66,17 @@ var state_handlers = {
       'AMAZON.HelpIntent': function() {
         logger.info('START_MODE:AMAZON.HelpIntent');
 
-        this.response
-          .speak(constants.strings.START_HELP)
-          .listen(constants.strings.START_HELP);
+        this.response.speak(this.t('START_HELP')).listen(this.t('START_HELP'));
         this.emit(':responseReady');
       },
       'AMAZON.StopIntent': function() {
         logger.info('START_MODE:AMAZON.StopIntent');
-        this.response.speak(constants.strings.ALEXA_STOP_RESP);
+        this.response.speak(this.t('ALEXA_STOP_RESP'));
         this.emit(':responseReady');
       },
       'AMAZON.CancelIntent': function() {
         logger.info('START_MODE:AMAZON.CancelIntent');
-        this.response.speak(constants.strings.ALEXA_STOP_RESP);
+        this.response.speak(this.t('ALEXA_STOP_RESP'));
         this.emit(':responseReady');
       },
       'AMAZON.PauseIntent': function() {
@@ -92,8 +90,8 @@ var state_handlers = {
       'AMAZON.RepeatIntent': function() {
         logger.info('START_MODE:AMAZON.RepeatIntent');
         this.response
-          .speak(constants.strings.WELCOME_MSG)
-          .listen(constants.strings.WELCOME_REPROMPT);
+          .speak(this.t('WELCOME_MSG'))
+          .listen(this.t('WELCOME_REPROMPT'));
         this.emit(':responseReady');
       },
       SessionEndedRequest: function() {
@@ -122,8 +120,8 @@ var state_handlers = {
       Unhandled: function() {
         logger.info('START_MODE:Unhandled');
         this.response
-          .speak(constants.strings.ERROR_UNHANDLED_STATE)
-          .listen(constants.strings.ERROR_UNHANDLED_STATE);
+          .speak(this.t('ERROR_UNHANDLED_STATE'))
+          .listen(this.t('ERROR_UNHANDLED_STATE'));
         this.emit(':responseReady');
       }
     }
@@ -135,8 +133,8 @@ var state_handlers = {
       this.handler.state = constants.states.START_MODE;
 
       this.response
-        .speak(constants.strings.WELCOME_MSG)
-        .listen(constants.strings.WELCOME_REPROMPT);
+        .speak(this.t('WELCOME_MSG'))
+        .listen(this.t('WELCOME_REPROMPT'));
       this.emit(':responseReady');
     },
     SearchAndPlayArticle: function() {
@@ -205,7 +203,7 @@ var state_handlers = {
     'AMAZON.StopIntent': function() {
       logger.info('PLAY_MODE:AMAZON.StopIntent');
       audio_controller.stop.call(this);
-      this.response.speak(constants.strings.ALEXA_STOP_RESP);
+      this.response.speak(this.t('ALEXA_STOP_RESP'));
       this.emit(':responseReady');
     },
     'AMAZON.CancelIntent': function() {
@@ -215,9 +213,7 @@ var state_handlers = {
     'AMAZON.HelpIntent': function() {
       logger.info('PLAY_MODE:AMAZON.HelpIntent');
 
-      this.response
-        .speak(constants.strings.START_HELP)
-        .listen(constants.strings.START_HELP);
+      this.response.speak(this.t('START_HELP')).listen(this.t('START_HELP'));
       this.emit(':responseReady');
     },
     SessionEndedRequest: function() {
@@ -233,8 +229,8 @@ var state_handlers = {
       logger.info('PLAY_MODE:Unhandled');
 
       this.response
-        .speak(constants.strings.PLAY_MODE_UNHANDLED)
-        .listen(constants.strings.PLAY_MODE_UNHANDLED);
+        .speak(this.t('PLAY_MODE_UNHANDLED'))
+        .listen(this.t('PLAY_MODE_UNHANDLED'));
       this.emit(':responseReady');
     }
   }),
@@ -253,8 +249,8 @@ var state_handlers = {
         this.handler.state = constants.states.START_MODE;
 
         this.response
-          .speak(constants.strings.WELCOME_MSG)
-          .listen(constants.strings.WELCOME_REPROMPT);
+          .speak(this.t('WELCOME_MSG'))
+          .listen(this.t('WELCOME_REPROMPT'));
         this.emit(':responseReady');
       },
       'AMAZON.YesIntent': function() {
@@ -312,7 +308,7 @@ var state_handlers = {
       'AMAZON.StopIntent': function() {
         logger.info('TITLES_DECISION_MODE:AMAZON.StopIntent');
         this.handler.state = constants.states.START_MODE;
-        this.response.speak(constants.strings.ALEXA_STOP_RESP);
+        this.response.speak(this.t('ALEXA_STOP_RESP'));
         this.handler.state = '';
         delete this.attributes['STATE'];
         this.emit(':saveState', true);
@@ -321,9 +317,7 @@ var state_handlers = {
       },
       'AMAZON.HelpIntent': function() {
         logger.info('TITLES_DECISION_MODE:AMAZON.HelpIntent');
-        this.response
-          .speak(constants.strings.TITLE_HELP)
-          .listen(constants.strings.TITLE_HELP);
+        this.response.speak(this.t('TITLE_HELP')).listen(this.t('TITLE_HELP'));
         this.emit(':responseReady');
       },
       'AMAZON.RepeatIntent': function() {
@@ -343,11 +337,11 @@ var state_handlers = {
         );
         this.response
           .speak(
-            constants.strings.TITLES_REPEAT +
+            this.t('TITLES_REPEAT') +
               respTitles +
-              constants.strings.TITLE_CHOICE_EXPLAIN
+              this.t('TITLE_CHOICE_EXPLAIN')
           )
-          .listen(constants.strings.TITLE_CHOICE_EXPLAIN_REPROMPT);
+          .listen(this.t('TITLE_CHOICE_EXPLAIN_REPROMPT'));
 
         this.emit(':responseReady');
       },
@@ -361,15 +355,15 @@ var state_handlers = {
         let message;
         let reprompt;
         if (!respTitles) {
-          message = `${constants.strings.END_OF_TITLES} ${
-            constants.strings.TITLE_CHOICE_EXPLAIN
-          }`;
-          reprompt = constants.strings.TITLE_CHOICE_EXPLAIN;
+          message = `${this.t('END_OF_TITLES')} ${this.t(
+            'TITLE_CHOICE_EXPLAIN'
+          )}`;
+          reprompt = this.t('TITLE_CHOICE_EXPLAIN');
         } else {
-          message = `${constants.strings.TITLE_PREFIX} ${respTitles} ${
-            constants.strings.TITLE_CHOICE_EXPLAIN
-          }`;
-          reprompt = constants.strings.TITLE_CHOICE_EXPLAIN_REPROMPT;
+          message = `${this.t('TITLE_PREFIX')} ${respTitles} ${this.t(
+            'TITLE_CHOICE_EXPLAIN'
+          )}`;
+          reprompt = this.t('TITLE_CHOICE_EXPLAIN_REPROMPT');
         }
         this.response.speak(message).listen(reprompt);
 
@@ -386,7 +380,7 @@ var state_handlers = {
         logger.info('TITLES_DECISION_MODE:Unhandled');
 
         var message =
-          constants.strings.ERROR_UNEXPECTED_STATE +
+          this.t('ERROR_UNEXPECTED_STATE') +
           constants.states.TITLES_DECISION_MODE;
         this.response.speak(message).listen(message);
         this.emit(':responseReady');
@@ -522,6 +516,7 @@ function matchArticleToTitlesHelper(stateObj) {
   if (searchTerm) {
     let thisVar = stateObj;
     findBestScoringTitle(
+      stateObj,
       searchTerm,
       stateObj.attributes['titles'].articles
     ).then(
@@ -529,14 +524,14 @@ function matchArticleToTitlesHelper(stateObj) {
         thisVar.attributes['chosenArticle'] = article.resolved_url;
         thisVar.attributes['articleId'] = article.item_id;
         thisVar.response
-          .speak(constants.strings.TITLE_CHOOSE_SUMM_FULL)
-          .listen(constants.strings.TITLE_CHOICE_REPROMPT);
+          .speak(stateObj.t('TITLE_CHOOSE_SUMM_FULL'))
+          .listen(stateObj.t('TITLE_CHOICE_REPROMPT'));
         thisVar.emit(':responseReady');
       },
       function(rejectReason) {
         thisVar.response
-          .speak(constants.strings.TITLE_SEARCH_MATCH_FAIL)
-          .listen(constants.strings.TITLE_SEARCH_MATCH_FAIL);
+          .speak(stateObj.t('TITLE_SEARCH_MATCH_FAIL'))
+          .listen(stateObj.t('TITLE_SEARCH_MATCH_FAIL'));
         thisVar.attributes['chosenArticle'] = 'none';
         thisVar.emit(':responseReady');
       }
@@ -565,13 +560,13 @@ function playOrdinal(stateObj, position) {
     stateObj.attributes['chosenArticle'] = article.resolved_url;
     stateObj.attributes['articleId'] = article.item_id;
     stateObj.response
-      .speak(constants.strings.TITLE_CHOOSE_SUMM_FULL)
-      .listen(constants.strings.TITLE_CHOICE_REPROMPT);
+      .speak(stateObj.t('TITLE_CHOOSE_SUMM_FULL'))
+      .listen(stateObj.t('TITLE_CHOICE_REPROMPT'));
     stateObj.emit(':responseReady');
   } else {
     stateObj.response
-      .speak(constants.strings.ORDINAL_FAIL)
-      .listen(constants.strings.ORDINAL_FAIL);
+      .speak(stateObj.t('ORDINAL_FAIL'))
+      .listen(stateObj.t('ORDINAL_FAIL'));
     stateObj.attributes['chosenArticle'] = 'none';
     stateObj.emit(':responseReady');
   }
@@ -599,15 +594,15 @@ function getTitlesHelper(stateObj) {
       let respTitles = getTitleChunk(titles.articles, stateObj);
       stateObj.response
         .speak(
-          constants.strings.TITLE_ANN +
+          stateObj.t('TITLE_ANN') +
             respTitles +
-            constants.strings.TITLE_CHOICE_EXPLAIN
+            stateObj.t('TITLE_CHOICE_EXPLAIN')
         )
-        .listen(constants.strings.TITLE_CHOICE_EXPLAIN_REPROMPT);
+        .listen(stateObj.t('TITLE_CHOICE_EXPLAIN_REPROMPT'));
       stateObj.emit(':responseReady');
     },
     error => {
-      stateObj.response.speak(constants.strings.ERROR_GETTING_TITLES);
+      stateObj.response.speak(stateObj.t('ERROR_GETTING_TITLES'));
       stateObj.emit(':responseReady');
     }
   );
@@ -647,11 +642,9 @@ function getTitleChunk(articleJson, stateObj) {
 // to play with audioPlayer.
 function synthesisHelper(stateObj) {
   logger.debug('synthesisHelper');
-  const directiveServiceCall = callDirectiveService(stateObj.event).catch(
-    error => {
-      logger.error('Unable to play a progressive response' + error);
-    }
-  );
+  const directiveServiceCall = callDirectiveService(stateObj).catch(error => {
+    logger.error('Unable to play a progressive response' + error);
+  });
 
   const getArticle = scout_agent.handle(stateObj.event).then(
     url => {
@@ -684,16 +677,14 @@ function synthesisHelperUrl(stateObj) {
   if (stateObj.attributes['chosenArticle'] === 'none') {
     logger.error('No chosenArticle.  User probably did not use an intent.');
     stateObj.response
-      .speak(constants.strings.TITLE_SEARCH_MATCH_FAIL)
-      .listen(constants.strings.TITLE_SEARCH_MATCH_FAIL);
+      .speak(stateObj.t('TITLE_SEARCH_MATCH_FAIL'))
+      .listen(stateObj.t('TITLE_SEARCH_MATCH_FAIL'));
     stateObj.attributes['chosenArticle'] = 'none';
     stateObj.emit(':responseReady');
   } else {
-    const directiveServiceCall = callDirectiveService(stateObj.event).catch(
-      error => {
-        logger.error('Unable to play a progressive response' + error);
-      }
-    );
+    const directiveServiceCall = callDirectiveService(stateObj).catch(error => {
+      logger.error('Unable to play a progressive response' + error);
+    });
     logger.info('Chosen Article is: ' + stateObj.attributes['chosenArticle']);
     stateObj.attributes['full'] =
       stateObj.event.request.intent.name == 'fullarticle';
@@ -711,7 +702,7 @@ function synthesisHelperUrl(stateObj) {
       })
       .catch(function(err) {
         logger.error(`handleURL promise failed: ${err}`);
-        stateObj.response.speak(constants.strings.ARTICLE_FAIL_MSG);
+        stateObj.response.speak(stateObj.t('ARTICLE_FAIL_MSG'));
         stateObj.emit(':responseReady');
       });
 
@@ -746,7 +737,7 @@ function getTitleFromSlotEvent(event) {
   return search;
 }
 
-function findBestScoringTitle(searchPhrase, articleArr) {
+function findBestScoringTitle(stateObj, searchPhrase, articleArr) {
   return new Promise((resolve, reject) => {
     natural.PorterStemmer.attach();
     //tokenize and stem the search utterance that user said
@@ -775,7 +766,7 @@ function findBestScoringTitle(searchPhrase, articleArr) {
         // Check to make sure something matched above score of 0.
         if (maxValue === 0) {
           logger.error('Error, no search match with utterance');
-          reject(constants.strings.TITLE_SEARCH_MATCH_FAIL);
+          reject(stateObj.t('TITLE_SEARCH_MATCH_FAIL'));
         } else {
           logger.debug('Article is: ' + articleArr[curMaxIndex].title);
           resolve(articleArr[curMaxIndex]);
@@ -785,15 +776,15 @@ function findBestScoringTitle(searchPhrase, articleArr) {
   });
 }
 
-function callDirectiveService(event) {
+function callDirectiveService(stateObj) {
   // Call Alexa Directive Service.
   const ds = new Alexa.services.DirectiveService();
-  const requestId = event.request.requestId;
-  const endpoint = event.context.System.apiEndpoint;
-  const token = event.context.System.apiAccessToken;
+  const requestId = stateObj.event.request.requestId;
+  const endpoint = stateObj.event.context.System.apiEndpoint;
+  const token = stateObj.event.context.System.apiAccessToken;
   const directive = new Alexa.directives.VoicePlayerSpeakDirective(
     requestId,
-    constants.strings.WAIT_ARTICLE
+    stateObj.t('WAIT_ARTICLE')
   );
   return ds.enqueue(directive, endpoint, token);
 }
