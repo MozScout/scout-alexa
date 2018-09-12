@@ -44,7 +44,8 @@ module.exports = Object.freeze({
       'or say Repeat to hear the titles again.',
     TITLE_CHOICE_EXPLAIN: 'What would you like to listen to?',
     TITLE_CHOICE_EXPLAIN_REPROMPT:
-      'What would you like to listen to?' + 'You can say next for more titles.',
+      'What would you like to listen to?' +
+      ' You can say next for more titles.',
     TITLES_NEXT: 'Here are the next titles: ',
     TITLES_REPEAT: 'Repeating last titles<break />',
     TITLE_CHOOSE_SUMM_FULL:
