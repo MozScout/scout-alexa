@@ -523,15 +523,19 @@ function matchArticleToTitlesHelper(stateObj) {
       function(article) {
         thisVar.attributes['chosenArticle'] = article.resolved_url;
         thisVar.attributes['articleId'] = article.item_id;
-        thisVar.response
-          .speak(stateObj.t('TITLE_CHOOSE_SUMM_FULL'))
-          .listen(stateObj.t('TITLE_CHOICE_REPROMPT'));
-        thisVar.emit(':responseReady');
+        if (process.env.SUMMARY && process.env.SUMMARY == 'false') {
+          synthesisHelperUrl(thisVar);
+        } else {
+          thisVar.response
+            .speak(thisVar.t('TITLE_CHOOSE_SUMM_FULL'))
+            .listen(thisVar.t('TITLE_CHOICE_REPROMPT'));
+          thisVar.emit(':responseReady');
+        }
       },
       function(rejectReason) {
         thisVar.response
-          .speak(stateObj.t('TITLE_SEARCH_MATCH_FAIL'))
-          .listen(stateObj.t('TITLE_SEARCH_MATCH_FAIL'));
+          .speak(thisVar.t('TITLE_SEARCH_MATCH_FAIL'))
+          .listen(thisVar.t('TITLE_SEARCH_MATCH_FAIL'));
         thisVar.attributes['chosenArticle'] = 'none';
         thisVar.emit(':responseReady');
       }
@@ -559,10 +563,14 @@ function playOrdinal(stateObj, position) {
   if (article) {
     stateObj.attributes['chosenArticle'] = article.resolved_url;
     stateObj.attributes['articleId'] = article.item_id;
-    stateObj.response
-      .speak(stateObj.t('TITLE_CHOOSE_SUMM_FULL'))
-      .listen(stateObj.t('TITLE_CHOICE_REPROMPT'));
-    stateObj.emit(':responseReady');
+    if (process.env.SUMMARY && process.env.SUMMARY == 'false') {
+      synthesisHelperUrl(stateObj);
+    } else {
+      stateObj.response
+        .speak(stateObj.t('TITLE_CHOOSE_SUMM_FULL'))
+        .listen(stateObj.t('TITLE_CHOICE_REPROMPT'));
+      stateObj.emit(':responseReady');
+    }
   } else {
     stateObj.response
       .speak(stateObj.t('ORDINAL_FAIL'))
@@ -686,8 +694,12 @@ function synthesisHelperUrl(stateObj) {
       logger.error('Unable to play a progressive response' + error);
     });
     logger.info('Chosen Article is: ' + stateObj.attributes['chosenArticle']);
-    stateObj.attributes['full'] =
-      stateObj.event.request.intent.name == 'fullarticle';
+    if (process.env.SUMMARY && process.env.SUMMARY == false) {
+      stateObj.attributes['full'] = true;
+    } else {
+      stateObj.attributes['full'] =
+        stateObj.event.request.intent.name == 'fullarticle';
+    }
     stateObj.attributes['userId'] = stateObj.event.session.user.accessToken;
     const article = scout_agent
       .handleUrl(stateObj.attributes['chosenArticle'], stateObj.event)
