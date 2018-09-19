@@ -69,7 +69,7 @@ In Skills/Your Skills/Dev Skill you should see your Skill in development. Enable
 
 Testing using [Bespoken virtual-alexa](https://github.com/bespoken/virtual-alexa).
 
-To run tests, you need to have the environment variables `JWOT_TOKEN`, `SCOUT_ADDR`, and `STRING_BRAND`. You also need to have AWS credentials.
+To run tests, you need to have the environment variables `JWOT_TOKEN`, `SCOUT_ADDR`, `SUMMARY`, and `STRING_BRAND`. You also need to have AWS credentials.
 
 To run tests manually: `npm test` from inside the lambda/custom directory.  The node_modules must be generated locally on the machine your running the tests from.  Using the node_modules generated on the EC2 instance will not work.  It's best to backup any EC2 node_modules directory you have, run `npm install` and then run `npm test`.
 
