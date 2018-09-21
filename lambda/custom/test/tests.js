@@ -14,7 +14,7 @@ const alexa = vax.VirtualAlexa.Builder()
   .handler('index.handler') // Lambda function file and name
   .interactionModelFile('../../models/en-US.json')
   .create();
-alexa.context().setAccessToken('scoutskilltest@mailinator.com');
+alexa.context().setAccessToken(process.env.TEST_ACCT1);
 
 const checkStreamingString = '.mp3';
 
@@ -1150,7 +1150,7 @@ describe('Integration Tests', function() {
 describe('Integration Tests - Account 2', function() {
   this.timeout(120 * 1000);
   before(function() {
-    alexa.context().setAccessToken('scoutskilltest2@mailinator.com');
+    alexa.context().setAccessToken(process.env.TEST_ACCT2);
   });
   afterEach(async function() {
     result = await alexa.utter('stop');
@@ -1232,7 +1232,7 @@ describe('Integration Tests - Account 2', function() {
 describe('Integration Tests - Unregistered account / API down', function() {
   this.timeout(120 * 1000);
   before(function() {
-    alexa.context().setAccessToken('unregistered-user@mailinator.com');
+    alexa.context().setAccessToken(process.env.TEST_ACCT_INVALID);
   });
   it('Get Titles - Next', async () => {
     let result = await alexa.launch();
