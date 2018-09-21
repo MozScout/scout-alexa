@@ -76,8 +76,11 @@ To run tests, you need the following configuration:
   * `JWOT_TOKEN=<valid scout-ua JWT token>`
   * `SUMMARY=true`
   * `STRING_BRAND=./scout_strings.json` 
+  * `TEST_ACCT1=<user1>@email.com` 
+  * `TEST_ACCT2=<user2>@email.com` 
+  * `TEST_ACCT_INVALID=<non-existent-user>@email.com` 
 * Two Scout users with linked Pocket accounts and the following criteria:
-  * User 1: `scoutskilltest@mailinator.com`
+  * User 1: `<user1>@email.com`
     * Account contains 6-8 articles linked in Pocket
     * Article titles to satisfy each of the following search terms:
       * Firefox
@@ -85,8 +88,11 @@ To run tests, you need the following configuration:
       * Amazon TV
       * Boring Company
       * Donald Trump
-  * User 2: `scoutskilltest2@mailinator.com`
+  * User 2: `<user2>@email.com`
     * Account contains 6-10 articles saved in Pocket
+  * User 3: `<non-existent-user>@email.com`
+    * Account does not exist.
+    
   
 
 To run tests manually: `npm test` from inside the lambda/custom directory.  The node_modules must be generated locally on the machine your running the tests from.  Using the node_modules generated on the EC2 instance will not work.  It's best to backup any EC2 node_modules directory you have, run `npm install` and then run `npm test`.
