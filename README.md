@@ -93,7 +93,17 @@ To run tests, you need the following configuration:
   * User 3: `<non-existent-user>@email.com`
     * Account does not exist.
     
-  
+Sample URLs that will make the tests pass:
+http://www.businessinsider.com/details-emerge-of-intel-ceo-brian-krzanich-office-affair-resignation-2018-6
+https://www.bloomberg.com/news/articles/2018-09-18/amazon-dominates-early-emmy-awards-in-sign-tv-bet-is-paying-off
+https://www.theverge.com/transportation/2018/9/13/17856078/elon-musk-boring-company-underground-garage-hyperloop
+https://www.cnn.com/2018/09/19/politics/donald-trump-ethics-analysis/index.html
+https://techcrunch.com/2018/09/18/mozillas-firefox-reality-web-browser-is-now-available/
+http://www.spiegel.de/politik/ausland/usa-paul-manafort-kooperiert-mit-sonderermittler-robert-mueller-a-1228236.html
+https://www.nytimes.com/2018/04/20/well/family/nobody-tells-you-how-long-a-marriage-is.html
+https://www.newyorker.com/books/page-turner/my-last-day-as-a-surgeon
+
+Do not add more than the 8 URLs.
 
 To run tests manually: `npm test` from inside the lambda/custom directory.  The node_modules must be generated locally on the machine your running the tests from.  Using the node_modules generated on the EC2 instance will not work.  It's best to backup any EC2 node_modules directory you have, run `npm install` and then run `npm test`.
 
