@@ -1,6 +1,8 @@
 'use strict';
 var constants = require('./constants');
 const logger = require('./logger');
+const metricsHelper = require('./metricsHelper');
+const mh = new metricsHelper();
 
 var audio_controller = (function() {
   return {
@@ -42,6 +44,11 @@ var audio_controller = (function() {
       this.attributes['enqueuedToken'] = token;
       this.attributes['queue'].shift();
       this.emit(':responseReady');
+      mh.add(
+        constants.metrics.START_LISTEN,
+        this,
+        this.attributes['articleId']
+      );
     },
     stop: function() {
       logger.debug('received a stop request');

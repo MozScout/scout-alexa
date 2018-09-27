@@ -2,6 +2,8 @@
 
 var Alexa = require('ask-sdk-v1adapter');
 var constants = require('./constants');
+const metricsHelper = require('./metricsHelper');
+const mh = new metricsHelper();
 const logger = require('./logger');
 
 // Binding audio handlers to PLAY_MODE State since they are expected only in this mode.
@@ -22,6 +24,14 @@ var audioEventHandlers = Alexa.CreateStateHandler(constants.states.PLAY_MODE, {
   PlaybackFinished: function() {
     this.handler.state = constants.states.START_MODE;
     this.emit('FinishedArticle');
+    // Send a metric if this is the end of the article
+    if (this.event.request.token == this.attributes['url']) {
+      mh.add(
+        constants.metrics.REACH_END_LISTEN,
+        this,
+        this.attributes['articleId']
+      );
+    }
   },
 
   PlaybackStopped: function() {
