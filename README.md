@@ -23,6 +23,7 @@ Add the following environment variables to your Lambda function:
 * `SCOUT_ADDR`: API hostname for scout-ua (`yourserver.com` for instance)
 * `LOG_LEVEL`: Optional. [Winston](https://github.com/winstonjs/winston) logging level.
 * `SUMMARY`: Optional.  If this is there and set to 'false', the user will not get an option to hear the summary.  The only option will be the full article.
+* `POCKET_KEY`: Optional.  If you want to send metrics to the Pocket server, this can be your pocket consumer key.
 
 #### Cross Compiling the natural packages
 
