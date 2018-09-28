@@ -65,6 +65,12 @@ module.exports = Object.freeze({
     WAIT_ARTICLE: 'One moment while I get that ready for you...',
     USER_AGENT: 'Alexa Skill'
   },
+  metrics: {
+    GET_TITLES: 'listen_command',
+    START_LISTEN: 'start_listen',
+    REACH_END_LISTEN: 'reach_end_listen',
+    CTX_CMD_GET_TITLES: 'get_titles'
+  },
   TITLE_CHUNK_LEN: 5,
 
   // when true, the skill logs additional detail, including the full request received from Alexa

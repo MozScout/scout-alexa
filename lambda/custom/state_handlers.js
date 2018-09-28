@@ -7,6 +7,8 @@ var audio_controller = require('./audio_controller');
 var constants = require('./constants');
 var natural = require('natural');
 var TfIdf = natural.TfIdf;
+const metricsHelper = require('./metricsHelper');
+const mh = new metricsHelper();
 const logger = require('./logger');
 
 var state_handlers = {
@@ -592,6 +594,8 @@ async function searchAndPlayArticleHelper(stateObj) {
 //Handler to get the titles for Alexa to read
 function getTitlesHelper(stateObj) {
   logger.debug('ScoutTitles');
+  mh.add(constants.metrics.GET_TITLES, stateObj, null);
+
   stateObj.attributes['chosenArticle'] = 'none';
   scout_agent.handle(stateObj.event).then(
     titles => {

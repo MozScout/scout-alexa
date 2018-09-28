@@ -10,6 +10,7 @@
   "dependencies": {
     "ask-sdk": "^2.0.7",
     "ask-sdk-v1adapter": "^2.0.7",
+    "dynamoose": "^0.8.7",
     "fuse": "^0.4.0",
     "fuse.js": "^3.2.1",
     "natural": "0.5.1",
