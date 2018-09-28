@@ -24,14 +24,38 @@
           "samples": []
         },
         {
-          "name": "ScoutMyPocket",
-          "slots": [],
-          "samples": ["pocket"]
-        },
-        {
           "name": "ScoutTitles",
           "slots": [],
-          "samples": ["get my titles", "get titles", "titles"]
+          "samples": [
+            "titles",
+            "get titles",
+            "play titles",
+            "read titles",
+            "get my titles",
+            "read my titles",
+            "play my titles",
+            "articles",
+            "get articles",
+            "play articles",
+            "read articles",
+            "get my articles",
+            "read my articles",
+            "play my articles",
+            "saves",
+            "get saves",
+            "play saves",
+            "read saves",
+            "get my saves",
+            "read my saves",
+            "play my saves",
+            "stories",
+            "get stories",
+            "play stories",
+            "read stories",
+            "get my stories",
+            "read my stories",
+            "play my stories"
+          ]
         },
         {
           "name": "SearchAndPlayArticle",
