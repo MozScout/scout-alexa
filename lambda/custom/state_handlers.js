@@ -401,7 +401,7 @@ var scout_agent = (function() {
       'X-Accept': 'application/json',
       Content: 'application/json',
       'x-access-token': process.env.JWOT_TOKEN,
-      'User-Agent': constants.strings.USER_AGENT
+      'User-Agent': constants.USER_AGENT
     }
   };
 
@@ -464,7 +464,7 @@ var scout_agent = (function() {
             'X-Accept': 'application/json',
             Content: 'application/json',
             'x-access-token': process.env.JWOT_TOKEN,
-            'User-Agent': constants.strings.USER_AGENT
+            'User-Agent': constants.USER_AGENT
           }
         };
 

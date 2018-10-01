@@ -2,13 +2,17 @@ var AWS = require('aws-sdk');
 AWS.config.update({ region: 'us-east-1' });
 const assert = require('chai').assert;
 const vax = require('virtual-alexa');
-const constants = require('../constants');
+const stringResources = require(`../${process.env.STRING_BRAND}`);
 const logger = require('../logger');
 
 if (!process.env.SCOUT_ADDR || !process.env.JWOT_TOKEN) {
   logger.error('No env vars found.');
   throw new Error('No env vars found. Please add SCOUT_ADDR and JWOT_TOKEN.');
 }
+
+// Load Alexa strings
+const constants = {};
+constants.strings = stringResources.en.translation;
 
 const alexa = vax.VirtualAlexa.Builder()
   .handler('index.handler') // Lambda function file and name
