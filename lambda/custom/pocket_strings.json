@@ -25,5 +25,61 @@
       "PLAY_MODE_UNHANDLED": "Sorry, I could not understand that.  You can say pause or resume or stop to control the audio",
       "WAIT_ARTICLE": "One moment while I get that ready for you..."
     }
+  },
+  "fr": {
+    "translation": {
+      "LINK_ACCOUNT": "Pour commencer à utiliser cette Skill, veuillez utiliser l'application compagnon pour procéder à l'authentification sur Amazon. ",
+      "WELCOME_MSG": "Bienvenue sur Pocket. Pour commencer, dites « récupérer des titres ».",
+      "WELCOME_REPROMPT": "Pour commencer, dites « récupérer mes titres ».",
+      "START_HELP": "Pour écouter un article, dites « Lire », suivi du titre ou de quelques mots-clés. Par exemple, dites « Lire celui sur les ours polaires ». Dites « Récupérer mes titres » pour écouter les 5 premiers articles dans votre file d'attente Pocket.",
+      "TITLE_HELP": "Pour écouter un article, dites « Lire », suivi du titre ou de quelques mots-clés. Par exemple, dites « Lire celui sur les ours polaires ». Dites « Récupérer mes titres » pour écouter les 5 premiers articles dans votre file d'attente Pocket, « Suivant » pour en écouter 5 autres et « Répéter » pour les écouter à nouveau. ",
+      "TITLE_PREFIX": "Voici les titres suivants :",
+      "END_OF_TITLES": "Il n'y a pas d'autres titres dans votre file d'attente.",
+      "TITLE_ANN": "Voici vos titres : ",
+      "TITLE_SEARCH_MATCH_FAIL": "Désolé, je n'ai pas trouvé de correspondance.  Dites « Lire », suivi de quelques mots du titre ou dites « Répéter » pour écouter les titres à nouveau.",
+      "ORDINAL_FAIL": "Désolé, vous n'avez pas assez de titres. Dites « Lire », suivi de quelques mots du titre ou dites « Répéter » pour écouter les titres à nouveau.",
+      "TITLE_CHOICE_EXPLAIN": "Que voudriez-vous écouter ?",
+      "TITLE_CHOICE_EXPLAIN_REPROMPT": "Que voudriez-vous écouter ? Vous pouvez dire « Suivant » pour écouter d'autres titres.",
+      "TITLES_NEXT": "Voici les titres suivants : ",
+      "TITLES_REPEAT": "Répétition des derniers titres<break />",
+      "TITLE_CHOOSE_SUMM_FULL": "Voulez-vous écouter un résumé ou l'article entier ?",
+      "TITLE_CHOICE_REPROMPT": "Vous pouvez dire « Résumé » ou « Article entier ».",
+      "ARTICLE_FAIL_MSG": "Impossible de trouver l'article.  Vous pouvez dire « Récupérer » des titres pour écouter vos titres.",
+      "ALEXA_STOP_RESP": "Au revoir ! Merci d'avoir utilisé Pocket pour écouter des articles sur le Web",
+      "ERROR_UNHANDLED_STATE": "Désolé, je n'ai pas compris. Vous pouvez dire « Récupérer des titres » pour écouter vos titres.",
+      "ERROR_UNEXPECTED_STATE": "Désolé, une erreur s'est produite: in state: ",
+      "ERROR_GETTING_TITLES": "Erreur lors de la récupération des titres",
+      "PLAY_MODE_UNHANDLED": "Désolé, je n'ai pas compris.  Vous pouvez dire « pause », « reprendre » ou « arrêter » pour contrôler l'audio",
+      "WAIT_ARTICLE": "Veuillez patienter...",
+      "USER_AGENT": "Skill Alexa"
+    }
+  },
+  "de": {
+    "translation": {
+      "LINK_ACCOUNT": "Um diesen Skill zu nutzen, musst du die entsprechende Begleit-App zur Authentifizierung mit Amazon verwenden. ",
+      "WELCOME_MSG": "Willkommen bei Pocket. Leg los, indem du „Titel abrufen“ sagst.",
+      "WELCOME_REPROMPT": "Leg los, indem du „Meine Titel abrufen“ sagst.",
+      "START_HELP": "Um dir einen Artikel anzuhören, musst du einfach nur einen Titel oder ein paar Stichwörter nennen und anschließend „Wiedergeben“ sagen. Du kannst zum Beispiel sagen „Den Artikel über Eisbären wiedergeben.“ Sag „Meine Titel abrufen“, um dir die ersten 5 Artikel in deiner Pocket-Schlange anzuhören.",
+      "TITLE_HELP": "Um dir einen Artikel anzuhören, musst du einfach nur einen Titel oder ein paar Stichwörter nennen und anschließend „Wiedergeben“ sagen. Du kannst zum Beispiel sagen „Den Artikel über Eisbären wiedergeben.“ Sag „Meine Titel abrufen“, um dir die ersten 5 Artikel in deiner Pocket-Schlange anzuhören, „Weiter“ für die nächsten 5, und „Wiederholen“, um die Artikel erneut wiederzugeben. ",
+      "TITLE_PREFIX": "Hier sind die nächsten Titel:",
+      "END_OF_TITLES": "Es befinden sich keine weiteren Titel in deiner Schlange.",
+      "TITLE_ANN": "Hier sind deine Titel: ",
+      "TITLE_SEARCH_MATCH_FAIL": "Leider gab es keine Treffer.  Nenne ein paar Stichwörter im Titel und sage dann „Wiedergeben“ oder „Wiederholen“, wenn du die Titel erneut hören willst.",
+      "ORDINAL_FAIL": "Leider hast du nicht ausreichend Titel. Nenne ein paar Stichwörter im Titel und sage dann „Wiedergeben“ oder „Wiederholen“, wenn du die Titel erneut hören willst.",
+      "TITLE_CHOICE_EXPLAIN": "Was möchtest du dir anhören?",
+      "TITLE_CHOICE_EXPLAIN_REPROMPT": "Was möchtest du dir anhören? Indem du „Weiter“ sagst, wechselst du zum nächsten Titel.",
+      "TITLES_NEXT": "Hier sind die nächsten Titel: ",
+      "TITLES_REPEAT": "Letzte Titel werden wiederholt<break />",
+      "TITLE_CHOOSE_SUMM_FULL": "Möchtest du eine Zusammenfassung oder den vollständigen Artikel hören?",
+      "TITLE_CHOICE_REPROMPT": "Du kannst „Zusammenfassung“ oder „Vollständiger Artikel“ sagen.",
+      "ARTICLE_FAIL_MSG": "Der Artikel konnte nicht gefunden werden.  Bitte versuche, deine Titel wiederzugeben, indem du „Titel abrufen“ sagst.",
+      "ALEXA_STOP_RESP": "Tschüss! Vielen Dank, dass du mit Pocket ins Web reingehört hast",
+      "ERROR_UNHANDLED_STATE": "Das habe ich leider nicht verstanden. Bitte versuche, deine Titel wiederzugeben, indem du „Titel abrufen“ sagst.",
+      "ERROR_UNEXPECTED_STATE": "Leider ist ein Fehler aufgetreten: in state: ",
+      "ERROR_GETTING_TITLES": "Fehler beim Abrufen deiner Titel",
+      "PLAY_MODE_UNHANDLED": "Das habe ich leider nicht verstanden.  Du kannst „Pausieren“, „Fortfahren“ oder „Stopp“ sagen, um die Audiowiedergabe zu steuern.",
+      "WAIT_ARTICLE": "Bitte warte einen Moment, deine Inhalte werden vorbereitet …",
+      "USER_AGENT": "Alexa Skill"
+    }
   }
 }
