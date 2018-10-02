@@ -82,7 +82,7 @@ To run tests, you need the following configuration:
   * `TEST_ACCT_INVALID=<non-existent-user>@email.com` 
 * Two Scout users with linked Pocket accounts and the following criteria:
   * User 1: `<user1>@email.com`
-    * Account contains 6-8 articles linked in Pocket
+    * Account contains 7-9 articles linked in Pocket
     * Article titles to satisfy each of the following search terms:
       * Firefox
       * Intel resignation
@@ -90,7 +90,7 @@ To run tests, you need the following configuration:
       * Boring Company
       * Donald Trump
   * User 2: `<user2>@email.com`
-    * Account contains 6-10 articles saved in Pocket
+    * Account contains 7-9 articles saved in Pocket
   * User 3: `<non-existent-user>@email.com`
     * Account does not exist.
     
