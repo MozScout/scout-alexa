@@ -4,15 +4,15 @@ const assert = require('chai').assert;
 const vax = require('virtual-alexa');
 const stringResources = require(`../${process.env.STRING_BRAND}`);
 const logger = require('../logger');
-
+const SkillConstants = require('../constants');
 if (!process.env.SCOUT_ADDR || !process.env.JWOT_TOKEN) {
   logger.error('No env vars found.');
   throw new Error('No env vars found. Please add SCOUT_ADDR and JWOT_TOKEN.');
 }
 
 // Load Alexa strings
-const constants = {};
-constants.strings = stringResources.en.translation;
+let constants = { strings: stringResources.en.translation };
+Object.assign(constants, SkillConstants);
 
 const alexa = vax.VirtualAlexa.Builder()
   .handler('index.handler') // Lambda function file and name
@@ -507,7 +507,11 @@ describe('Integration Tests', function() {
       assert.isNotTrue(alexa.audioPlayer().isPlaying());
     });
 
-    it('Play Fourth after Get Titles', async () => {
+    it('Play Fourth after Get Titles', async function() {
+      if (constants.TITLE_CHUNK_LEN < 4) {
+        this.skip();
+      }
+
       let result = await alexa.launch();
       assert.include(result.prompt(), constants.strings.WELCOME_MSG);
       assert.include(result.reprompt(), constants.strings.WELCOME_REPROMPT);
@@ -529,7 +533,10 @@ describe('Integration Tests', function() {
       assert.isNotTrue(alexa.audioPlayer().isPlaying());
     });
 
-    it('Play Fifth after Get Titles', async () => {
+    it('Play Fifth after Get Titles', async function() {
+      if (constants.TITLE_CHUNK_LEN < 5) {
+        this.skip();
+      }
       let result = await alexa.launch();
       assert.include(result.prompt(), constants.strings.WELCOME_MSG);
       assert.include(result.reprompt(), constants.strings.WELCOME_REPROMPT);
@@ -619,7 +626,11 @@ describe('Integration Tests', function() {
       assert.isNotTrue(alexa.audioPlayer().isPlaying());
     });
 
-    it('Play fourth after Get Titles / Next - Not Enough', async () => {
+    it('Play fourth after Get Titles / Next - Not Enough', async function() {
+      if (constants.TITLE_CHUNK_LEN < 4) {
+        this.skip();
+      }
+
       let result = await alexa.launch();
       assert.include(result.prompt(), constants.strings.WELCOME_MSG);
       assert.include(result.reprompt(), constants.strings.WELCOME_REPROMPT);
@@ -1057,11 +1068,24 @@ describe('Integration Tests', function() {
   });
 
   describe('Error Paths', function() {
+    /* 
+   * Note: this test makes assumptions about the number of articles in the test
+   * account because we do not have access to the full list of articles from 
+   * Alexa. Changing the TITLE_CHUNK_LEN value will require updating this test.
+   */
     it('Get Titles - Next - Next: No more titles', async () => {
       let result = await alexa.launch();
 
       result = await alexa.utter('get titles');
       assert.include(result.prompt(), constants.strings.TITLE_ANN);
+
+      result = await alexa.utter('next');
+      assert.include(result.prompt(), constants.strings.TITLE_PREFIX);
+      assert.include(result.prompt(), constants.strings.TITLE_CHOICE_EXPLAIN);
+      assert.include(
+        result.reprompt(),
+        constants.strings.TITLE_CHOICE_EXPLAIN_REPROMPT
+      );
 
       result = await alexa.utter('next');
       assert.include(result.prompt(), constants.strings.TITLE_PREFIX);
@@ -1161,11 +1185,24 @@ describe('Integration Tests - Account 2', function() {
     assert.isNotTrue(alexa.audioPlayer().isPlaying());
   });
 
+  /* 
+   * Note: this test makes assumptions about the number of articles in the test
+   * account because we do not have access to the full list of articles from 
+   * Alexa. Changing the TITLE_CHUNK_LEN value will require updating this test.
+   */
   it('Get Titles - Next - Next: No more titles', async () => {
     let result = await alexa.launch();
 
     result = await alexa.utter('get titles');
     assert.include(result.prompt(), constants.strings.TITLE_ANN);
+
+    result = await alexa.utter('next');
+    assert.include(result.prompt(), constants.strings.TITLE_PREFIX);
+    assert.include(result.prompt(), constants.strings.TITLE_CHOICE_EXPLAIN);
+    assert.include(
+      result.reprompt(),
+      constants.strings.TITLE_CHOICE_EXPLAIN_REPROMPT
+    );
 
     result = await alexa.utter('next');
     assert.include(result.prompt(), constants.strings.TITLE_PREFIX);
