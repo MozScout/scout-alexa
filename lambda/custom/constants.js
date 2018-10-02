@@ -4,7 +4,7 @@ module.exports = Object.freeze({
   // App-ID. TODO: set to your own Skill App ID from the developer portal.
   appId: '',
   dynamoDBTableName: 'ScoutDB',
-  TITLE_CHUNK_LEN: 5,
+  TITLE_CHUNK_LEN: Number(process.env.ARTICLE_BATCH_SIZE) || 3,
   USER_AGENT: 'Alexa Skill',
   // when true, the skill logs additional detail, including the full request received from Alexa
   debug: true,
