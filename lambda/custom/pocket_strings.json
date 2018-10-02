@@ -4,8 +4,8 @@
       "LINK_ACCOUNT": "To start using this skill, please use the companion app to authenticate on Amazon. ",
       "WELCOME_MSG": "Welcome to Pocket. To begin, say get articles.",
       "WELCOME_REPROMPT": "Begin by saying get my articles.",
-      "START_HELP": "To listen to an article, say “Play”, followed by the title or a few keywords. For example, say “Play the one about polar bears.” You can say “Get my articles” to hear the first few articles in your Pocket queue.",
-      "TITLE_HELP": "To listen to an article, say “Play”, followed by the title or a few keywords. For example, say “Play the one about polar bears.” You can say “Get my articles” to hear the first few articles in your Pocket queue, next, to hear the next few, and repeat, to hear them again. ",
+      "START_HELP": "To listen to an article, say Play, followed by the title or a few keywords. For example, say Play the one about polar bears. You can say Get my articles to hear the first few articles in your Pocket queue.",
+      "TITLE_HELP": "To listen to an article, say Play, followed by the title or a few keywords. For example, say Play the one about polar bears. You can say Get my articles to hear the first few articles in your Pocket queue, next, to hear the next few, and repeat, to hear them again.",
       "TITLE_PREFIX": "Here are the next articles:",
       "END_OF_TITLES": "There are no more articles in your queue.",
       "TITLE_ANN": "Here are your articles: ",
@@ -23,8 +23,7 @@
       "ERROR_UNEXPECTED_STATE": "Sorry, unhandled intent: in state: ",
       "ERROR_GETTING_TITLES": "Error Getting articles",
       "PLAY_MODE_UNHANDLED": "Sorry, I could not understand that.  You can say pause or resume or stop to control the audio",
-      "WAIT_ARTICLE": "One moment while I get that ready for you...",
-      "USER_AGENT": "Alexa Skill"
+      "WAIT_ARTICLE": "One moment while I get that ready for you..."
     }
   }
 }
