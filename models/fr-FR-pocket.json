@@ -1,0 +1,162 @@
+{
+  "interactionModel": {
+    "languageModel": {
+      "invocationName": "scout",
+      "intents": [
+        {
+          "name": "AMAZON.CancelIntent",
+          "samples": []
+        },
+
+        {
+          "name": "AMAZON.HelpIntent",
+          "samples": []
+        },
+
+        {
+          "name": "AMAZON.PauseIntent",
+          "samples": []
+        },
+
+        {
+          "name": "AMAZON.ResumeIntent",
+          "samples": []
+        },
+
+        {
+          "name": "AMAZON.StopIntent",
+          "samples": []
+        },
+
+        {
+          "name": "ScoutTitles",
+          "slots": [],
+          "samples": ["récupérer mes titres", "récupérer des titres", "titres"]
+        },
+
+        {
+          "name": "SearchAndPlayArticle",
+          "slots": [
+            {
+              "name": "CatchAllSlot",
+              "type": "AMAZON.SearchQuery"
+            }
+          ],
+          "samples": [
+            "lire cet article sur {CatchAllSlot}",
+            "lire l'article sur {CatchAllSlot}",
+            "Lire {CatchAllSlot}"
+          ]
+        },
+
+        {
+          "name": "PlayFirst",
+          "slots": [],
+          "samples": [
+            "lire premier",
+            "lire numéro un",
+            "un",
+            "numéro un",
+            "Prénom",
+            "le premier",
+            "lire le premier",
+            "lire le premier"
+          ]
+        },
+
+        {
+          "name": "PlaySecond",
+          "slots": [],
+          "samples": [
+            "lire deuxième",
+            "lire numéro deux",
+            "deux",
+            "numéro deux",
+            "deuxième",
+            "le deuxième",
+            "lire le deuxième",
+            "lire le deuxième"
+          ]
+        },
+
+        {
+          "name": "PlayThird",
+          "slots": [],
+          "samples": [
+            "lire troisième",
+            "lire numéro trois",
+            "trois",
+            "numéro trois",
+            "troisième",
+            "le troisième",
+            "lire le troisième",
+            "lire le troisième"
+          ]
+        },
+
+        {
+          "name": "PlayFourth",
+          "slots": [],
+          "samples": [
+            "lire quatrième",
+            "lire numéro quatre",
+            "quatre",
+            "numéro quatre",
+            "quatrième",
+            "le quatrième",
+            "lire le quatrième",
+            "lire le quatrième"
+          ]
+        },
+
+        {
+          "name": "PlayFifth",
+          "slots": [],
+          "samples": [
+            "lire cinquième",
+            "lire numéro cinq",
+            "cinq",
+            "numéro cinq",
+            "cinquième",
+            "le cinquième",
+            "lire le cinquième",
+            "lire le cinquième"
+          ]
+        },
+
+        {
+          "name": "AMAZON.RepeatIntent",
+          "samples": ["le répéter", "les répéter", "répéter cela", "répéter"]
+        },
+
+        {
+          "name": "AMAZON.NextIntent",
+          "samples": []
+        },
+
+        {
+          "name": "AMAZON.YesIntent",
+          "samples": []
+        },
+
+        {
+          "name": "AMAZON.NoIntent",
+          "samples": []
+        },
+
+        {
+          "name": "parcourir",
+          "slots": [],
+          "samples": ["résumer", "me faire un résumé", "résumé", "parcourir"]
+        },
+
+        {
+          "name": "fullarticle",
+          "slots": [],
+          "samples": ["histoire complète", "article entier", "histoire entière"]
+        }
+      ],
+      "types": []
+    }
+  }
+}

@@ -1,0 +1,176 @@
+{
+  "interactionModel": {
+    "languageModel": {
+      "invocationName": "scout",
+      "intents": [
+        {
+          "name": "AMAZON.CancelIntent",
+          "samples": []
+        },
+
+        {
+          "name": "AMAZON.HelpIntent",
+          "samples": []
+        },
+
+        {
+          "name": "AMAZON.PauseIntent",
+          "samples": []
+        },
+
+        {
+          "name": "AMAZON.ResumeIntent",
+          "samples": []
+        },
+
+        {
+          "name": "AMAZON.StopIntent",
+          "samples": []
+        },
+
+        {
+          "name": "ScoutTitles",
+          "slots": [],
+          "samples": ["Meine Titel abrufen", "Titel abrufen", "Titel"]
+        },
+
+        {
+          "name": "SearchAndPlayArticle",
+          "slots": [
+            {
+              "name": "CatchAllSlot",
+              "type": "AMAZON.SearchQuery"
+            }
+          ],
+          "samples": [
+            "Artikel über {CatchAllSlot} wiedergeben",
+            "Den Artikel über {CatchAllSlot} wiedergeben",
+            "{CatchAllSlot} wiedergeben"
+          ]
+        },
+
+        {
+          "name": "PlayFirst",
+          "slots": [],
+          "samples": [
+            "Ersten Titel wiedergeben",
+            "Nummer eins wiedergeben",
+            "Eins",
+            "Nummer eins",
+            "Vor",
+            "Der erste Titel",
+            "Den Ersten wiedergeben",
+            "Den ersten Titel wiedergeben"
+          ]
+        },
+
+        {
+          "name": "PlaySecond",
+          "slots": [],
+          "samples": [
+            "Zweiten Titel wiedergeben",
+            "Nummer zwei wiedergeben",
+            "Zwei",
+            "Nummer zwei",
+            "Der Zweite",
+            "Der zweite Titel",
+            "Den Zweiten wiedergeben",
+            "Den zweiten Titel wiedergeben"
+          ]
+        },
+
+        {
+          "name": "PlayThird",
+          "slots": [],
+          "samples": [
+            "Dritten Titel wiedergeben",
+            "Nummer drei wiedergeben",
+            "Drei",
+            "Nummer drei",
+            "Der Dritte",
+            "Der dritte Titel",
+            "Den Dritten wiedergeben",
+            "Den dritten Titel wiedergeben"
+          ]
+        },
+
+        {
+          "name": "PlayFourth",
+          "slots": [],
+          "samples": [
+            "Vierten wiedergeben",
+            "Nummer vier wiedergeben",
+            "Vier",
+            "Nummer Vier",
+            "Der Vierte",
+            "Der vierte Artikel",
+            "Den Vierten wiedergeben",
+            "Den vierten Titel wiedergeben"
+          ]
+        },
+
+        {
+          "name": "PlayFifth",
+          "slots": [],
+          "samples": [
+            "Fünften wiedergeben",
+            "Nummer fünf wiedergeben",
+            "Fünf",
+            "Nummer fünf",
+            "Der Fünfte",
+            "Der fünfte Titel",
+            "Den Fünften wiedergeben",
+            "Den fünften Titel wiedergeben"
+          ]
+        },
+
+        {
+          "name": "AMAZON.RepeatIntent",
+          "samples": [
+            "Titel wiederholen",
+            "Diese Titel wiederholen",
+            "Diesen Titel wiederholen",
+            "Wiederholen"
+          ]
+        },
+
+        {
+          "name": "AMAZON.NextIntent",
+          "samples": []
+        },
+
+        {
+          "name": "AMAZON.YesIntent",
+          "samples": []
+        },
+
+        {
+          "name": "AMAZON.NoIntent",
+          "samples": []
+        },
+
+        {
+          "name": "Überfliegen",
+          "slots": [],
+          "samples": [
+            "Zusammenfassen",
+            "Zusammenfassung wiedergeben",
+            "Zusammenfassung",
+            "Überfliegen"
+          ]
+        },
+
+        {
+          "name": "fullarticle",
+          "slots": [],
+          "samples": [
+            "Ganze Geschichte",
+            "Vollständiger Artikel",
+            "Vollständige Geschichte"
+          ]
+        }
+      ],
+      "types": []
+    }
+  }
+}
