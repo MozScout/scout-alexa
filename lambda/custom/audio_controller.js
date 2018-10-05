@@ -45,8 +45,9 @@ var audio_controller = (function() {
       this.attributes['queue'].shift();
       this.emit(':responseReady');
       mh.add(
-        constants.metrics.START_LISTEN,
+        constants.metrics.CMD_START_LISTEN,
         this,
+        null,
         this.attributes['articleId']
       );
     },

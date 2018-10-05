@@ -27,8 +27,9 @@ var audioEventHandlers = Alexa.CreateStateHandler(constants.states.PLAY_MODE, {
     // Send a metric if this is the end of the article
     if (this.event.request.token == this.attributes['url']) {
       mh.add(
-        constants.metrics.REACH_END_LISTEN,
+        constants.metrics.CMD_REACH_END_LISTEN,
         this,
+        null,
         this.attributes['articleId']
       );
     }
