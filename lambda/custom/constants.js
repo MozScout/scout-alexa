@@ -23,9 +23,12 @@ module.exports = Object.freeze({
     TITLES_DECISION_MODE: '_TITLES_DECISION_MODE'
   },
   metrics: {
-    GET_TITLES: 'listen_command',
-    START_LISTEN: 'start_listen',
-    REACH_END_LISTEN: 'reach_end_listen',
-    CTX_CMD_GET_TITLES: 'get_titles'
+    CMD_LISTEN: 'listen_command',
+    CMD_START_LISTEN: 'start_listen',
+    CMD_REACH_END_LISTEN: 'reach_end_listen',
+    CXT_CMD_GET_TITLES: 'get_titles',
+    CXT_CMD_OPEN_POCKET: 'open_pocket',
+    CXT_CMD_PLAY_SUBJECT: 'play_article_subject',
+    CXT_CMD_PLAY_NUMBER: 'play_article_number'
   }
 });

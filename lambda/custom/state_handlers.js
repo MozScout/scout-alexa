@@ -28,6 +28,12 @@ var state_handlers = {
           .speak(this.t('WELCOME_MSG'))
           .listen(this.t('WELCOME_REPROMPT'));
         this.emit(':responseReady');
+        mh.add(
+          constants.metrics.CMD_LISTEN,
+          this,
+          constants.metrics.CXT_CMD_OPEN_POCKET,
+          null
+        );
       },
       SearchAndPlayArticle: function() {
         logger.info('START_MODE:SearchAndPlayArticle');
@@ -138,6 +144,12 @@ var state_handlers = {
         .speak(this.t('WELCOME_MSG'))
         .listen(this.t('WELCOME_REPROMPT'));
       this.emit(':responseReady');
+      mh.add(
+        constants.metrics.CMD_LISTEN,
+        this,
+        constants.metrics.CXT_CMD_OPEN_POCKET,
+        null
+      );
     },
     SearchAndPlayArticle: function() {
       logger.info('PLAY_MODE:SearchAndPlayArticle');
@@ -254,6 +266,12 @@ var state_handlers = {
           .speak(this.t('WELCOME_MSG'))
           .listen(this.t('WELCOME_REPROMPT'));
         this.emit(':responseReady');
+        mh.add(
+          constants.metrics.CMD_LISTEN,
+          this,
+          constants.metrics.CXT_CMD_OPEN_POCKET,
+          null
+        );
       },
       'AMAZON.YesIntent': function() {
         logger.info('TITLES_DECISION_MODE:AMAZON.YesIntent');
@@ -528,6 +546,12 @@ function matchArticleToTitlesHelper(stateObj) {
         thisVar.attributes['articleId'] = article.item_id;
         if (process.env.SUMMARY && process.env.SUMMARY == 'false') {
           synthesisHelperUrl(thisVar);
+          mh.add(
+            constants.metrics.CMD_LISTEN,
+            stateObj,
+            constants.metrics.CXT_CMD_PLAY_SUBJECT,
+            article.item_id
+          );
         } else {
           thisVar.response
             .speak(thisVar.t('TITLE_CHOOSE_SUMM_FULL'))
@@ -568,6 +592,13 @@ function playOrdinal(stateObj, position) {
     stateObj.attributes['articleId'] = article.item_id;
     if (process.env.SUMMARY && process.env.SUMMARY == 'false') {
       synthesisHelperUrl(stateObj);
+      // Log a metric for Pocket
+      mh.add(
+        constants.metrics.CMD_LISTEN,
+        stateObj,
+        constants.metrics.CXT_CMD_PLAY_NUMBER,
+        article.item_id
+      );
     } else {
       stateObj.response
         .speak(stateObj.t('TITLE_CHOOSE_SUMM_FULL'))
@@ -595,7 +626,12 @@ async function searchAndPlayArticleHelper(stateObj) {
 //Handler to get the titles for Alexa to read
 function getTitlesHelper(stateObj) {
   logger.debug('ScoutTitles');
-  mh.add(constants.metrics.GET_TITLES, stateObj, null);
+  mh.add(
+    constants.metrics.CMD_LISTEN,
+    stateObj,
+    constants.metrics.CXT_CMD_GET_TITLES,
+    null
+  );
 
   stateObj.attributes['chosenArticle'] = 'none';
   scout_agent.handle(stateObj.event).then(

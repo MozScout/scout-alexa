@@ -5,7 +5,7 @@ const constants = require('./constants');
 const rp = require('request-promise');
 
 class metricsHelper {
-  async add(action, stateObj, item_id) {
+  async add(action, stateObj, command, item_id) {
     logger.debug('Entering Metrics helper');
     if (process.env.POCKET_KEY) {
       if (!stateObj.attributes['access_token']) {
@@ -16,13 +16,14 @@ class metricsHelper {
 
       const metricsLink = 'https://getpocket.com/v3/send?actions=';
       let actionKeys;
-      if (action == constants.metrics.GET_TITLES) {
+      if (action == constants.metrics.CMD_LISTEN) {
         actionKeys = [
           {
             action: action,
             time: Date.now(),
             cxt_view: 'command',
-            cxt_command: constants.metrics.CTX_CMD_GET_TITLES
+            cxt_command: command,
+            item_id: item_id ? item_id : undefined
           }
         ];
       } else {
