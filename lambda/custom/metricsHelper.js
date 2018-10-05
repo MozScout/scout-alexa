@@ -20,7 +20,7 @@ class metricsHelper {
         actionKeys = [
           {
             action: action,
-            time: Date.now(),
+            time: Date.now() / 1000,
             cxt_view: 'command',
             cxt_command: command,
             item_id: item_id ? item_id : undefined
@@ -30,7 +30,7 @@ class metricsHelper {
         actionKeys = [
           {
             action: action,
-            time: Date.now(),
+            time: Date.now() / 1000,
             cxt_view: 'command',
             item_id: item_id
           }
