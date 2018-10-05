@@ -464,7 +464,7 @@ var scout_agent = (function() {
           });
       });
     },
-    handleUrl: function(chosenArticle, event) {
+    handleUrl: function(chosenArticle, itemId, event) {
       return new Promise((resolve, reject) => {
         let synthType =
           event.request.intent.name == 'skim' ? 'summary' : 'article';
@@ -474,6 +474,7 @@ var scout_agent = (function() {
           body: JSON.stringify({
             userid: event.session.user.accessToken,
             url: chosenArticle,
+            item_id: itemId,
             meta_audio: 1
           }),
           method: 'POST',
@@ -742,7 +743,11 @@ function synthesisHelperUrl(stateObj) {
     }
     stateObj.attributes['userId'] = stateObj.event.session.user.accessToken;
     const article = scout_agent
-      .handleUrl(stateObj.attributes['chosenArticle'], stateObj.event)
+      .handleUrl(
+        stateObj.attributes['chosenArticle'],
+        stateObj.attributes['articleId'],
+        stateObj.event
+      )
       .then(function(article) {
         logger.debug('promise resolved: ' + article.url);
         stateObj.attributes['url'] = article.url;
