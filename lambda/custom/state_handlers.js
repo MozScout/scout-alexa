@@ -19,23 +19,25 @@ var state_handlers = {
          *  All Intent Handlers for state : START_MODE
          */
       LaunchRequest: function() {
-        if (!isLinked) return;
-
         logger.info('START_MODE:LaunchRequest');
-        //  Change state to START_MODE
-        this.handler.state = constants.states.START_MODE;
-        this.attributes['offsetInMilliseconds'] = 0;
+        if (this.event.session.user.accessToken == undefined) {
+          this.emit(':tellWithLinkAccountCard', this.t('LINK_ACCOUNT'));
+        } else {
+          //  Change state to START_MODE
+          this.handler.state = constants.states.START_MODE;
+          this.attributes['offsetInMilliseconds'] = 0;
 
-        this.response
-          .speak(this.t('WELCOME_MSG'))
-          .listen(this.t('WELCOME_REPROMPT'));
-        this.emit(':responseReady');
-        mh.add(
-          constants.metrics.CMD_LISTEN,
-          this,
-          constants.metrics.CXT_CMD_OPEN_POCKET,
-          null
-        );
+          this.response
+            .speak(this.t('WELCOME_MSG'))
+            .listen(this.t('WELCOME_REPROMPT'));
+          this.emit(':responseReady');
+          mh.add(
+            constants.metrics.CMD_LISTEN,
+            this,
+            constants.metrics.CXT_CMD_OPEN_POCKET,
+            null
+          );
+        }
       },
       LinkAccount: function() {
         this.emit(':tellWithLinkAccountCard', this.t('LINK_ACCOUNT'));
@@ -143,18 +145,22 @@ var state_handlers = {
     //Intent handlers for PLAY_MODE
     LaunchRequest: function() {
       logger.info('PLAY_MODE:LaunchRequest');
-      this.handler.state = constants.states.START_MODE;
+      if (this.event.session.user.accessToken == undefined) {
+        this.emit(':tellWithLinkAccountCard', this.t('LINK_ACCOUNT'));
+      } else {
+        this.handler.state = constants.states.START_MODE;
 
-      this.response
-        .speak(this.t('WELCOME_MSG'))
-        .listen(this.t('WELCOME_REPROMPT'));
-      this.emit(':responseReady');
-      mh.add(
-        constants.metrics.CMD_LISTEN,
-        this,
-        constants.metrics.CXT_CMD_OPEN_POCKET,
-        null
-      );
+        this.response
+          .speak(this.t('WELCOME_MSG'))
+          .listen(this.t('WELCOME_REPROMPT'));
+        this.emit(':responseReady');
+        mh.add(
+          constants.metrics.CMD_LISTEN,
+          this,
+          constants.metrics.CXT_CMD_OPEN_POCKET,
+          null
+        );
+      }
     },
     LinkAccount: function() {
       this.emit(':tellWithLinkAccountCard', this.t('LINK_ACCOUNT'));
@@ -268,22 +274,25 @@ var state_handlers = {
       //Intent handlers for TITLES_DECISION_MODE
       LaunchRequest: function() {
         logger.info('TITLES_DECISION_MODE:LaunchRequest');
-        if (!isLinked(this)) return;
+        if (this.event.session.user.accessToken == undefined) {
+          this.emit(':tellWithLinkAccountCard', this.t('LINK_ACCOUNT'));
+        } else {
+          this.handler.state = constants.states.START_MODE;
 
-        this.handler.state = constants.states.START_MODE;
-
-        this.response
-          .speak(this.t('WELCOME_MSG'))
-          .listen(this.t('WELCOME_REPROMPT'));
-        this.emit(':responseReady');
-        mh.add(
-          constants.metrics.CMD_LISTEN,
-          this,
-          constants.metrics.CXT_CMD_OPEN_POCKET,
-          null
-        );
+          this.response
+            .speak(this.t('WELCOME_MSG'))
+            .listen(this.t('WELCOME_REPROMPT'));
+          this.emit(':responseReady');
+          mh.add(
+            constants.metrics.CMD_LISTEN,
+            this,
+            constants.metrics.CXT_CMD_OPEN_POCKET,
+            null
+          );
+        }
       },
       LinkAccount: function() {
+        logger.info('TITLES_DECISION_MODE:LinkAccount');
         this.emit(':tellWithLinkAccountCard', this.t('LINK_ACCOUNT'));
       },
       'AMAZON.YesIntent': function() {
