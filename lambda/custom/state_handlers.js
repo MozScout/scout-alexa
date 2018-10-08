@@ -224,6 +224,47 @@ var state_handlers = {
       logger.info('PLAY_MODE:AMAZON.CancelIntent');
       audio_controller.stop.call(this);
     },
+    'AMAZON.LoopOffIntent': function() {
+      logger.info('PLAY_MODE:AMAZON.LoopOffIntent');
+      this.response.speak(this.t('ERROR_CANT_LOOP_OFF'));
+      this.emit(':responseReady');
+    },
+    'AMAZON.LoopOnIntent': function() {
+      logger.info('PLAY_MODE:AMAZON.LoopOnIntent');
+      this.response.speak(this.t('ERROR_CANT_LOOP_ON'));
+      this.emit(':responseReady');
+    },
+    'AMAZON.ShuffleOffIntent': function() {
+      logger.info('PLAY_MODE:AMAZON.ShuffleOffIntent');
+      this.response.speak(this.t('ERROR_CANT_SHUFFLE'));
+      this.emit(':responseReady');
+    },
+    'AMAZON.ShuffleOnIntent': function() {
+      logger.info('PLAY_MODE:AMAZON.ShuffleOnIntent');
+      this.response.speak(this.t('ERROR_CANT_SHUFFLE'));
+      this.emit(':responseReady');
+    },
+    'AMAZON.StartOverIntent': function() {
+      logger.info('PLAY_MODE:AMAZON.StartOverIntent');
+
+      this.response.speak(this.t('ERROR_CANT_STARTOVER'));
+      this.emit(':responseReady');
+    },
+    'AMAZON.NextIntent': function() {
+      logger.info('PLAY_MODE:AMAZON.NextIntent');
+      this.response.speak(this.t('ERROR_CANT_NEXT'));
+      this.emit(':responseReady');
+    },
+    'AMAZON.PreviousIntent': function() {
+      logger.info('PLAY_MODE:AMAZON.PreviousIntent');
+      this.response.speak(this.t('ERROR_CANT_PREVIOUS'));
+      this.emit(':responseReady');
+    },
+    'AMAZON.RepeatIntent': function() {
+      logger.info('PLAY_MODE:AMAZON.RepeatIntent');
+      this.response.speak(this.t('ERROR_CANT_REPEAT'));
+      this.emit(':responseReady');
+    },
     'AMAZON.HelpIntent': function() {
       logger.info('PLAY_MODE:AMAZON.HelpIntent');
 
