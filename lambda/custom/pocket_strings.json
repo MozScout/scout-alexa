@@ -1,7 +1,7 @@
 {
   "en": {
     "translation": {
-      "LINK_ACCOUNT": "To start using this skill, please use the companion app to authenticate on Amazon. ",
+      "LINK_ACCOUNT": "Your account is not linked, please go to the Alexa companion app and look for the Pocket account setup card on your home screen",
       "WELCOME_MSG": "Welcome to Pocket. To begin, say get articles.",
       "WELCOME_REPROMPT": "Begin by saying get my articles.",
       "START_HELP": "To listen to an article, say Play, followed by the title or a few keywords. For example, say Play the one about polar bears. You can say Get my articles to hear the first few articles in your Pocket queue.",

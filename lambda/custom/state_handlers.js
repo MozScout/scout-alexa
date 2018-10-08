@@ -20,20 +20,27 @@ var state_handlers = {
          */
       LaunchRequest: function() {
         logger.info('START_MODE:LaunchRequest');
-        //  Change state to START_MODE
-        this.handler.state = constants.states.START_MODE;
-        this.attributes['offsetInMilliseconds'] = 0;
+        if (this.event.session.user.accessToken == undefined) {
+          this.emit(':tellWithLinkAccountCard', this.t('LINK_ACCOUNT'));
+        } else {
+          //  Change state to START_MODE
+          this.handler.state = constants.states.START_MODE;
+          this.attributes['offsetInMilliseconds'] = 0;
 
-        this.response
-          .speak(this.t('WELCOME_MSG'))
-          .listen(this.t('WELCOME_REPROMPT'));
-        this.emit(':responseReady');
-        mh.add(
-          constants.metrics.CMD_LISTEN,
-          this,
-          constants.metrics.CXT_CMD_OPEN_POCKET,
-          null
-        );
+          this.response
+            .speak(this.t('WELCOME_MSG'))
+            .listen(this.t('WELCOME_REPROMPT'));
+          this.emit(':responseReady');
+          mh.add(
+            constants.metrics.CMD_LISTEN,
+            this,
+            constants.metrics.CXT_CMD_OPEN_POCKET,
+            null
+          );
+        }
+      },
+      LinkAccount: function() {
+        this.emit(':tellWithLinkAccountCard', this.t('LINK_ACCOUNT'));
       },
       SearchAndPlayArticle: function() {
         logger.info('START_MODE:SearchAndPlayArticle');
@@ -138,18 +145,25 @@ var state_handlers = {
     //Intent handlers for PLAY_MODE
     LaunchRequest: function() {
       logger.info('PLAY_MODE:LaunchRequest');
-      this.handler.state = constants.states.START_MODE;
+      if (this.event.session.user.accessToken == undefined) {
+        this.emit(':tellWithLinkAccountCard', this.t('LINK_ACCOUNT'));
+      } else {
+        this.handler.state = constants.states.START_MODE;
 
-      this.response
-        .speak(this.t('WELCOME_MSG'))
-        .listen(this.t('WELCOME_REPROMPT'));
-      this.emit(':responseReady');
-      mh.add(
-        constants.metrics.CMD_LISTEN,
-        this,
-        constants.metrics.CXT_CMD_OPEN_POCKET,
-        null
-      );
+        this.response
+          .speak(this.t('WELCOME_MSG'))
+          .listen(this.t('WELCOME_REPROMPT'));
+        this.emit(':responseReady');
+        mh.add(
+          constants.metrics.CMD_LISTEN,
+          this,
+          constants.metrics.CXT_CMD_OPEN_POCKET,
+          null
+        );
+      }
+    },
+    LinkAccount: function() {
+      this.emit(':tellWithLinkAccountCard', this.t('LINK_ACCOUNT'));
     },
     SearchAndPlayArticle: function() {
       logger.info('PLAY_MODE:SearchAndPlayArticle');
@@ -260,18 +274,26 @@ var state_handlers = {
       //Intent handlers for TITLES_DECISION_MODE
       LaunchRequest: function() {
         logger.info('TITLES_DECISION_MODE:LaunchRequest');
-        this.handler.state = constants.states.START_MODE;
+        if (this.event.session.user.accessToken == undefined) {
+          this.emit(':tellWithLinkAccountCard', this.t('LINK_ACCOUNT'));
+        } else {
+          this.handler.state = constants.states.START_MODE;
 
-        this.response
-          .speak(this.t('WELCOME_MSG'))
-          .listen(this.t('WELCOME_REPROMPT'));
-        this.emit(':responseReady');
-        mh.add(
-          constants.metrics.CMD_LISTEN,
-          this,
-          constants.metrics.CXT_CMD_OPEN_POCKET,
-          null
-        );
+          this.response
+            .speak(this.t('WELCOME_MSG'))
+            .listen(this.t('WELCOME_REPROMPT'));
+          this.emit(':responseReady');
+          mh.add(
+            constants.metrics.CMD_LISTEN,
+            this,
+            constants.metrics.CXT_CMD_OPEN_POCKET,
+            null
+          );
+        }
+      },
+      LinkAccount: function() {
+        logger.info('TITLES_DECISION_MODE:LinkAccount');
+        this.emit(':tellWithLinkAccountCard', this.t('LINK_ACCOUNT'));
       },
       'AMAZON.YesIntent': function() {
         logger.info('TITLES_DECISION_MODE:AMAZON.YesIntent');
@@ -532,7 +554,17 @@ var scout_agent = (function() {
   };
 })();
 
+function isLinked(stateObj) {
+  if (stateObj.event.session.user.accessToken == undefined) {
+    stateObj.emit(':tellWithLinkAccountCard', stateObj.t('LINK_ACCOUNT'));
+    return false;
+  }
+  return true;
+}
+
 function matchArticleToTitlesHelper(stateObj) {
+  if (!isLinked(stateObj)) return;
+
   let searchTerm = getTitleFromSlotEvent(stateObj.event);
   if (searchTerm) {
     let thisVar = stateObj;
@@ -572,6 +604,8 @@ function matchArticleToTitlesHelper(stateObj) {
 
 // helper fetches titles before playing ordinal
 async function ordinalHelper(stateObj, position) {
+  if (!isLinked(stateObj)) return;
+
   if (stateObj.event.session.new || !stateObj.attributes['titles']) {
     const titles = await scout_agent.handleTitles(stateObj.event);
     stateObj.attributes['titles'] = titles;
@@ -615,6 +649,8 @@ function playOrdinal(stateObj, position) {
 }
 
 async function searchAndPlayArticleHelper(stateObj) {
+  if (!isLinked(stateObj)) return;
+
   if (stateObj.event.session.new || !stateObj.attributes['titles']) {
     const titles = await scout_agent.handleTitles(stateObj.event);
     stateObj.attributes['titles'] = titles;
@@ -626,6 +662,8 @@ async function searchAndPlayArticleHelper(stateObj) {
 //Handler to get the titles for Alexa to read
 function getTitlesHelper(stateObj) {
   logger.debug('ScoutTitles');
+  if (!isLinked(stateObj)) return;
+
   mh.add(
     constants.metrics.CMD_LISTEN,
     stateObj,
@@ -691,6 +729,8 @@ function getTitleChunk(articleJson, stateObj) {
 // to play with audioPlayer.
 function synthesisHelper(stateObj) {
   logger.debug('synthesisHelper');
+  if (!isLinked(stateObj)) return;
+
   const directiveServiceCall = callDirectiveService(stateObj).catch(error => {
     logger.error('Unable to play a progressive response' + error);
   });
@@ -721,6 +761,7 @@ function synthesisHelper(stateObj) {
 // to play with audioPlayer.
 function synthesisHelperUrl(stateObj) {
   logger.debug('synthesisHelperUrl');
+  if (!isLinked(stateObj)) return;
 
   // Check to make sure that there is a chosen article first
   if (stateObj.attributes['chosenArticle'] === 'none') {
