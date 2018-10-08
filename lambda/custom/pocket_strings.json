@@ -9,7 +9,7 @@
       "TITLE_PREFIX": "Here are the next articles:",
       "END_OF_TITLES": "There are no more articles in your queue.",
       "TITLE_ANN": "Here are your articles: ",
-      "TITLE_SEARCH_MATCH_FAIL": "Sorry, I couldn’t find a match.  Say Play followed by a few words in the title or say Repeat to hear the articles again.",
+      "TITLE_SEARCH_MATCH_FAIL": "Sorry, I couldn’t match that to any of your articles in Pocket.  Say Play followed by a few words in a title, or say repeat to hear the articles again.",
       "ORDINAL_FAIL": "Sorry, you don't have enough articles. Say Play followed by a few words in the title or say Repeat to hear the articles again.",
       "TITLE_CHOICE_EXPLAIN": "What would you like to listen to?",
       "TITLE_CHOICE_EXPLAIN_REPROMPT": "What would you like to listen to? You can say next for more articles.",
@@ -25,12 +25,12 @@
       "PLAY_MODE_UNHANDLED": "Sorry, I could not understand that.  You can say pause or resume or stop to control the audio",
       "WAIT_ARTICLE": "One moment while I get that ready for you...",
       "ERROR_CANT_LOOP_OFF": "Sorry, I can’t loop articles yet.  You can say Alexa pause, to pause the audio.",
-      "ERROR_CANT_LOOP_ON": "Sorry, I can’t loop articles yet.  You can say get articles to list your articles.",
+      "ERROR_CANT_LOOP_ON": "Sorry, I can’t loop articles yet.",
       "ERROR_CANT_SHUFFLE": "Sorry, I can't shuffle articles yet.",
       "ERROR_CANT_STARTOVER": "Sorry, I can't start over yet.",
-      "ERROR_CANT_NEXT": "Sorry, I can't get the next article yet.  You can say Alexa, get articles to choose an article.",
-      "ERROR_CANT_PREVIOUS": "Sorry, I can't play the previous article yet.  You can say Alexa, get articles to choose an article.",
-      "ERROR_CANT_REPEAT": "Sorry, I can't repeat yet. You can say Alexa, tell Pocket to get articles, to choose an article."
+      "ERROR_CANT_NEXT": "Sorry, I can't get the next article yet.",
+      "ERROR_CANT_PREVIOUS": "Sorry, I can't play the previous article yet.",
+      "ERROR_CANT_REPEAT": "Sorry, I can't repeat yet."
     }
   }
 }

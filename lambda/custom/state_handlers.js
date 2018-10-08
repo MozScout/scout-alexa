@@ -86,24 +86,31 @@ var state_handlers = {
       },
       'AMAZON.StopIntent': function() {
         logger.info('START_MODE:AMAZON.StopIntent');
+        if (!isLinked(this)) return;
         this.response.speak(this.t('ALEXA_STOP_RESP'));
         this.emit(':responseReady');
       },
       'AMAZON.CancelIntent': function() {
         logger.info('START_MODE:AMAZON.CancelIntent');
+        if (!isLinked(this)) return;
+
         this.response.speak(this.t('ALEXA_STOP_RESP'));
         this.emit(':responseReady');
       },
       'AMAZON.PauseIntent': function() {
         logger.info('START_MODE:AMAZON.PauseIntent');
+        if (!isLinked(this)) return;
         audio_controller.stop.call(this);
       },
       'AMAZON.ResumeIntent': function() {
         logger.info('START_MODE:AMAZON.ResumeIntent');
+        if (!isLinked(this)) return;
         audio_controller.play.call(this);
       },
       'AMAZON.RepeatIntent': function() {
         logger.info('START_MODE:AMAZON.RepeatIntent');
+        if (!isLinked(this)) return;
+
         this.response
           .speak(this.t('WELCOME_MSG'))
           .listen(this.t('WELCOME_REPROMPT'));
@@ -203,6 +210,8 @@ var state_handlers = {
     },
     'AMAZON.PauseIntent': function() {
       logger.info('PLAY_MODE:AMAZON.PauseIntent');
+      if (!isLinked(this)) return;
+
       audio_controller.stop.call(this);
       this.emit('StoppedArticle');
     },
@@ -226,61 +235,83 @@ var state_handlers = {
     },
     'AMAZON.ResumeIntent': function() {
       logger.info('PLAY_MODE:AMAZON.ResumeIntent');
+      if (!isLinked(this)) return;
+
       audio_controller.play.call(this);
     },
     'AMAZON.StopIntent': function() {
       logger.info('PLAY_MODE:AMAZON.StopIntent');
+      if (!isLinked(this)) return;
+
       audio_controller.stop.call(this);
       this.response.speak(this.t('ALEXA_STOP_RESP'));
       this.emit(':responseReady');
     },
     'AMAZON.CancelIntent': function() {
       logger.info('PLAY_MODE:AMAZON.CancelIntent');
+      if (!isLinked(this)) return;
+
       audio_controller.stop.call(this);
     },
     'AMAZON.LoopOffIntent': function() {
       logger.info('PLAY_MODE:AMAZON.LoopOffIntent');
+      if (!isLinked(this)) return;
+
       this.response.speak(this.t('ERROR_CANT_LOOP_OFF'));
       this.emit(':responseReady');
     },
     'AMAZON.LoopOnIntent': function() {
       logger.info('PLAY_MODE:AMAZON.LoopOnIntent');
+      if (!isLinked(this)) return;
+
       this.response.speak(this.t('ERROR_CANT_LOOP_ON'));
       this.emit(':responseReady');
     },
     'AMAZON.ShuffleOffIntent': function() {
       logger.info('PLAY_MODE:AMAZON.ShuffleOffIntent');
+      if (!isLinked(this)) return;
+
       this.response.speak(this.t('ERROR_CANT_SHUFFLE'));
       this.emit(':responseReady');
     },
     'AMAZON.ShuffleOnIntent': function() {
       logger.info('PLAY_MODE:AMAZON.ShuffleOnIntent');
+      if (!isLinked(this)) return;
+
       this.response.speak(this.t('ERROR_CANT_SHUFFLE'));
       this.emit(':responseReady');
     },
     'AMAZON.StartOverIntent': function() {
       logger.info('PLAY_MODE:AMAZON.StartOverIntent');
+      if (!isLinked(this)) return;
 
       this.response.speak(this.t('ERROR_CANT_STARTOVER'));
       this.emit(':responseReady');
     },
     'AMAZON.NextIntent': function() {
       logger.info('PLAY_MODE:AMAZON.NextIntent');
+      if (!isLinked(this)) return;
+
       this.response.speak(this.t('ERROR_CANT_NEXT'));
       this.emit(':responseReady');
     },
     'AMAZON.PreviousIntent': function() {
       logger.info('PLAY_MODE:AMAZON.PreviousIntent');
+      if (!isLinked(this)) return;
+
       this.response.speak(this.t('ERROR_CANT_PREVIOUS'));
       this.emit(':responseReady');
     },
     'AMAZON.RepeatIntent': function() {
       logger.info('PLAY_MODE:AMAZON.RepeatIntent');
+      if (!isLinked(this)) return;
+
       this.response.speak(this.t('ERROR_CANT_REPEAT'));
       this.emit(':responseReady');
     },
     'AMAZON.HelpIntent': function() {
       logger.info('PLAY_MODE:AMAZON.HelpIntent');
+      if (!isLinked(this)) return;
 
       this.response.speak(this.t('START_HELP')).listen(this.t('START_HELP'));
       this.emit(':responseReady');
@@ -382,14 +413,20 @@ var state_handlers = {
       },
       'AMAZON.PauseIntent': function() {
         logger.info('TITLES_DECISION_MODE:AMAZON.PauseIntent');
+        if (!isLinked(this)) return;
+
         audio_controller.stop.call(this);
       },
       'AMAZON.ResumeIntent': function() {
         logger.info('TITLES_DECISION_MODE:AMAZON.ResumeIntent');
+        if (!isLinked(this)) return;
+
         audio_controller.play.call(this);
       },
       'AMAZON.StopIntent': function() {
         logger.info('TITLES_DECISION_MODE:AMAZON.StopIntent');
+        if (!isLinked(this)) return;
+
         this.handler.state = constants.states.START_MODE;
         this.response.speak(this.t('ALEXA_STOP_RESP'));
         this.handler.state = '';
@@ -400,11 +437,14 @@ var state_handlers = {
       },
       'AMAZON.HelpIntent': function() {
         logger.info('TITLES_DECISION_MODE:AMAZON.HelpIntent');
+        if (!isLinked(this)) return;
+
         this.response.speak(this.t('TITLE_HELP')).listen(this.t('TITLE_HELP'));
         this.emit(':responseReady');
       },
       'AMAZON.RepeatIntent': function() {
         logger.info('TITLES_DECISION_MODE:AMAZON.RepeatIntent');
+        if (!isLinked(this)) return;
 
         //Backup the title count.
         if (this.attributes['titleCount'] % constants.TITLE_CHUNK_LEN !== 0) {
@@ -431,6 +471,7 @@ var state_handlers = {
       'AMAZON.NextIntent': function() {
         //Get the next chunk of titles
         logger.info('TITLES_DECISION_MODE:AMAZON.NextIntent');
+        if (!isLinked(this)) return;
         let respTitles = getTitleChunk(
           this.attributes['titles'].articles,
           this
