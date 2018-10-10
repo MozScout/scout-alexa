@@ -423,6 +423,18 @@ var state_handlers = {
 
         audio_controller.play.call(this);
       },
+      'AMAZON.CancelIntent': function() {
+        logger.info('TITLES_DECISION_MODE:AMAZON.CancelIntent');
+        if (!isLinked(this)) return;
+
+        this.handler.state = constants.states.START_MODE;
+        this.response.speak(this.t('ALEXA_STOP_RESP'));
+        this.handler.state = '';
+        delete this.attributes['STATE'];
+        this.emit(':saveState', true);
+
+        this.emit(':responseReady');
+      },
       'AMAZON.StopIntent': function() {
         logger.info('TITLES_DECISION_MODE:AMAZON.StopIntent');
         if (!isLinked(this)) return;
