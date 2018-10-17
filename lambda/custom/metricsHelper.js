@@ -20,7 +20,7 @@ class metricsHelper {
         actionKeys = [
           {
             action: action,
-            time: Date.now() / 1000,
+            time: Math.floor(Date.now() / 1000),
             cxt_view: 'command',
             cxt_command: command,
             item_id: item_id ? item_id : undefined
@@ -30,7 +30,7 @@ class metricsHelper {
         actionKeys = [
           {
             action: action,
-            time: Date.now() / 1000,
+            time: Math.floor(Date.now() / 1000),
             cxt_view: 'command',
             item_id: item_id
           }
@@ -46,6 +46,8 @@ class metricsHelper {
 
       let metricsUri = metricsLink + JSON.stringify(actionKeys) + metricsParams;
 
+      logger.debug('metricsUri: ' + metricsUri);
+      logger.debug('metricsUri encoded: ' + encodeURI(metricsUri));
       const metricsOptions = {
         uri: encodeURI(metricsUri),
         method: 'GET',
