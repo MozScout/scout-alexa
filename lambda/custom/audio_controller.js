@@ -32,14 +32,17 @@ var audio_controller = (function() {
         this.attributes['queue'].push(this.attributes['url']);
       }
       var token = String(this.attributes['queue'][0]);
+      let offsetParam =
+        this.attributes['queue'][0] == this.attributes['url']
+          ? offsetInMilliseconds
+          : 0;
+      logger.info('offset before Play is: ' + offsetParam);
       this.response.audioPlayerPlay(
         playBehavior,
         this.attributes['queue'][0],
         token,
         null,
-        this.attributes['queue'][0] == this.attributes['url']
-          ? offsetInMilliseconds
-          : 0
+        offsetParam
       );
       this.attributes['enqueuedToken'] = token;
       this.attributes['queue'].shift();
