@@ -16,8 +16,8 @@ var state_handlers = {
     constants.states.START_MODE,
     {
       /*
-         *  All Intent Handlers for state : START_MODE
-         */
+       *  All Intent Handlers for state : START_MODE
+       */
       LaunchRequest: function() {
         logger.info('START_MODE:LaunchRequest');
         if (this.event.session.user.accessToken == undefined) {
@@ -335,11 +335,11 @@ var state_handlers = {
     }
   }),
   /* This is a state handler for when the user has asked to hear a list of
-  * titles and is trying to find/decide what to listen to.  Within this state,
-  * Scout can 1) get more titles, 2) play a title and transition to PLAY_MODE,
-  * 3) Ask Scout to repeat the titles, and 4)eventually, choose a numbered
-  * title to play which would transition them to PLAY_MODE.
-  */
+   * titles and is trying to find/decide what to listen to.  Within this state,
+   * Scout can 1) get more titles, 2) play a title and transition to PLAY_MODE,
+   * 3) Ask Scout to repeat the titles, and 4)eventually, choose a numbered
+   * title to play which would transition them to PLAY_MODE.
+   */
   titlesDecisionIntentHandlers: Alexa.CreateStateHandler(
     constants.states.TITLES_DECISION_MODE,
     {
@@ -886,7 +886,7 @@ function synthesisHelperUrl(stateObj) {
       .then(function(article) {
         logger.debug('promise resolved: ' + article.url);
         stateObj.attributes['url'] = article.url;
-        stateObj.attributes['instructions_url'] = article.instructions_url;
+        stateObj.attributes['instructions_url'] = getEndInstructions();
         stateObj.attributes['intro_url'] = article.intro_url;
         stateObj.attributes['outro_url'] = article.outro_url;
         stateObj.attributes['offsetInMilliseconds'] = article.offset_ms;
@@ -902,6 +902,14 @@ function synthesisHelperUrl(stateObj) {
       logger.debug(values);
     });
   }
+}
+
+function getEndInstructions() {
+  //TODO: Fix this up to handle locales when we localize the skills.
+  let url =
+    'https://' +
+    process.env.POLLY_S3_BUCKET +
+    '.s3.amazonaws.com/endInstructions_en-US.mp3';
 }
 
 function cleanStringForSsml(alexaString) {
